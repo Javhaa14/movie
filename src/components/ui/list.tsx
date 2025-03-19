@@ -1,6 +1,24 @@
+"use client";
 import { FaArrowRight } from "react-icons/fa6";
 import { Movie } from "./movie";
+import { useEffect, useState } from "react";
+import axios from "axios";
 export const List = ({ type }: any) => {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    axios
+      .get("https://api.themoviedb.org/3/movie/popular?language=en-US&page=1", {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
+        },
+      })
+      .then((res) => setData(res.data.results));
+  }, []);
+
   const moviedata = [
     {
       name: "Dear Santa",
@@ -63,13 +81,13 @@ export const List = ({ type }: any) => {
         </button>
       </div>
       <div className="w-full grid grid-cols-5 gap-8">
-        {moviedata.map((value) => {
+        {data?.slice(0, 10).map((value) => {
           return (
             <Movie
-              key={value.name}
-              name={value.name}
-              image={value.image}
-              rating={value.rating}
+              key={value.title}
+              name={value.title}
+              image={`https://image.tmdb.org/t/p/w300${value.poster_path}`}
+              rating={Math.floor(value.vote_average)}
             />
           );
         })}

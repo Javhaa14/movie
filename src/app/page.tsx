@@ -21,6 +21,7 @@ import {
 import { List } from "@/components/ui/list";
 import { MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
+import { CiPlay1 } from "react-icons/ci";
 
 export default function Home() {
   const sectiondata = ["Upcoming", "Popular", "Top Rated"];
@@ -53,6 +54,7 @@ export default function Home() {
                   <NavigationMenuTrigger>Genre</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <NavigationMenuLink>Link</NavigationMenuLink>
+                    <NavigationMenuLink>Link</NavigationMenuLink>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -67,35 +69,56 @@ export default function Home() {
         </div>
         <Carousel className="w-full h-[600px] relative">
           <CarouselContent>
-            <CarouselItem className="w-full h-[600px] overflow-hidden">
+            <CarouselItem className="w-full h-[600px] flex justify-center overflow-hidden">
               <img
                 id="slde-1"
-                className="w-full"
+                className="w-[1440px] h-[700px] absolute"
                 src="https://s3-alpha-sig.figma.com/img/c78e/5e57/16d36abbdaa8df480db189d5729e384a?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mLG2xOJZNT2vGCrvhDwo3-iKl0QLHOJCxUbykqD81OWYT61RDmWH~sY5qc4qVMmDHRoLdT3VXAnqpxjl4QRY7lvqwtvVTj2-RScRPADrSRE2X1dKJ6MNwI89GQsAr7CVA~Sw886s4cN3GzZCxbhX6nG5wCcsdExQ3ZifH-DrPK1y2qNpWDmJzamRmYUQB4G5gKUvdNeqjPEES5nuyWmp4tVWbJDWV1Ve6DECdtwn6WwE~0puD445Fe7qQpsvTO15bYmHP3E7sN6ZamI~BBe1H7Aisb1JjhHE35MH~r0CHClF6Ayy8aDTsnbuKYmE-rzkB3IlXZLoaZaJNRHFDc~Erg__"></img>
+              <div className="flex flex-col items-start gap-4 absolute left-[140px] bottom-[158px] text-white">
+                <div className="flex flex-col items-start gap-0 w-[404px] ">
+                  <p className="text-[16px]">Now Playing:</p>
+                  <p className="text-[36px] font-bold">Wicked</p>
+                  <div className="flex w-[83px] h-[48px] items-center gap-1">
+                    <div className="flex items-start gap-[10px] self-stretch pt-2">
+                      <img className="size-[28px]" src="star.svg"></img>
+                    </div>
+                    <div className="flex flex-row items-center justify-center">
+                      <p className="text-[18px] font-[600]">6.9</p>
+                      <p className="text-[16px] text-[#71717A]">/10</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="w-[310px] text-[12px] font-[400]">
+                  Elphaba, a misunderstood young woman because of her green
+                  skin, and Glinda, a popular girl, become friends at Shiz
+                  University in the Land of Oz. After an encounter with the
+                  Wonderful Wizard of Oz, their friendship reaches a crossroads.{" "}
+                </p>
+                <button className="flex w-fit h-[40px] py-2 px-4 justify-center items-center gap-2 rounded-md bg-[#F4F4F5]">
+                  <CiPlay1 className="size-4 text-[#18181B]" />
+                  <p className="text-[#18181B] text-[14px] font-[400]">
+                    Watch Trailer
+                  </p>
+                </button>
+              </div>
+              <div className="inline-flex items-center gap-2 absolute top-140">
+                <a
+                  className="size-2 rounded-[50%] bg-[#fff]"
+                  href="#slde-1"></a>
+                <a
+                  className="size-2 rounded-[50%] bg-[#ffffffcc]"
+                  href="#slde-2"></a>
+                <a
+                  className="size-2 rounded-[50%] bg-[#ffffffcc]"
+                  href="#slde-3"></a>
+              </div>
             </CarouselItem>
             <CarouselItem>...ssss</CarouselItem>
             <CarouselItem>...</CarouselItem>
           </CarouselContent>
-          <CarouselPrevious className="ml-[100px] mt-[100px]" />
-          <CarouselNext className="mr-[100px] mt-[100px]" />
+          <CarouselPrevious className="ml-[100px] mt-[50px]" />
+          <CarouselNext className="mr-[100px] mt-[50px]" />
         </Carousel>
-        {/* <div className="flex gap-2 w-fit h-fit z-40 left-[45%] top-[82%] absolute">
-          <a
-            className="w-[10px] h-[10px] rounded-[50%] bg-white opacity-[0.75] transition-opacity"
-            href="#slde-1"></a>
-          <a
-            className="w-[10px] h-[10px] rounded-[50%] bg-white opacity-[0.75] transition-opacity"
-            href="#slde-2"></a>
-          <a
-            className="w-[10px] h-[10px] rounded-[50%] bg-white opacity-[0.75] transition-opacity"
-            href="#slde-3"></a>
-          <a
-            className="w-[10px] h-[10px] rounded-[50%] bg-white opacity-[0.75] transition-opacity"
-            href="#slde-4"></a>
-          <a
-            className="w-[10px] h-[10px] rounded-[50%] bg-white opacity-[0.75] transition-opacity"
-            href="#slde-5"></a>
-        </div> */}
       </section>
       {sectiondata.map((value) => {
         return <List key={value} type={value} />;

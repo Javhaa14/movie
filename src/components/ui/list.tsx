@@ -19,7 +19,6 @@ export const List = ({ type, name, className }: any) => {
       })
       .then((res) => setData(res.data.results));
   }, []);
-  // const path= useRooter
   const router = useRouter();
 
   const handleonclick = (id: string) => {
@@ -31,6 +30,7 @@ export const List = ({ type, name, className }: any) => {
       <div className={`flex w-full justify-between items-start${className}`}>
         <p className="text-[24px]">{name}</p>
         <button className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+          <p className="text-[14px]">More Like This</p>
           <p className="text-[14px]">See more</p>
           <FaArrowRight className="size-[16px]" />
         </button>
@@ -39,6 +39,7 @@ export const List = ({ type, name, className }: any) => {
         {data?.slice(0, 10).map((value: any) => {
           return (
             <Movie
+              className={"w-[229px] h-[439px]"}
               onclick={() => {
                 handleonclick(value.id);
               }}

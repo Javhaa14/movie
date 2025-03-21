@@ -3,16 +3,18 @@ export const Movie = ({
   rating,
   name,
   onclick,
+  className,
 }: {
   image: string;
   rating: string;
   name: string;
+  className: string;
   onclick: () => void;
 }) => {
   return (
     <div
       onClick={onclick}
-      className="w-[229px] h-[439px] flex flex-col items-start gap-1 rounded-xl bg-[#F4F4F5] overflow-scroll">
+      className={`flex flex-col items-start gap-1 rounded-xl bg-[#F4F4F5] overflow-scroll ${className}`}>
       <img className="w-[229.73px] h-[340px] rounded-t-xl" src={image}></img>
       <div className="flex p-2 flex-col items-start self-stretch">
         <div className="flex h-[23px] items-start gap-1 self-stretch">

@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Searchmovie } from "@/components/ui/searchmovie";
+import { Genres } from "@/components/ui/genres";
 export const Navigation = ({ mode, handleonclick }: any) => {
   const [data, setData] = useState([{}]);
 
@@ -39,6 +40,22 @@ export const Navigation = ({ mode, handleonclick }: any) => {
       )
       .then((res) => setData(res.data.results));
   }, []);
+  const [genre, setGenre] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`https://api.themoviedb.org/3/genre/movie/list?language=en`, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
+        },
+      })
+      .then((res) => setGenre(res.data.genres));
+  }, []);
+  console.log(genre);
+
   return (
     <div className="flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center">
       <div className="flex items-center gap-2 w-[92px] h-[20px]">
@@ -71,9 +88,28 @@ export const Navigation = ({ mode, handleonclick }: any) => {
               </NavigationMenuTrigger>
               <NavigationMenuContent
                 className={`${
-                  mode ? "bg-white text-red" : "bg-black text-white"
+                  mode ? "bg-white text-black" : "bg-black text-white"
                 }`}>
-                <NavigationMenuLink className="flex w-[577px] p-5 flex-col items-start gap-0 rounded-[8px] border-[#E4E4E7] bg-white"></NavigationMenuLink>
+                <NavigationMenuLink
+                  className={`flex w-[577px] p-5 flex-col items-start gap-0 rounded-[8px]${
+                    mode ? "bg-white text-[#09090B]" : "bg-black text-white"
+                  }`}>
+                  <div className="flex w-[213px] flex-col items-start gap-1">
+                    <p className="self-stretch text-6 font-semibold">Genres</p>
+                    <p className="self-stretch text-4 font-normal">
+                      See lists of movies by genre
+                    </p>
+                  </div>
+                  <div className="flex w-[550px] py-4 flex-col items-start gap-[10px] self-stretch">
+                    <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+                  </div>
+                  <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
+                    {genre?.map((value: any) => {
+                      return <Genres key={value.name} genre={value.name} />;
+                    })}
+                  </div>
+                  {/* <button className="flex h-10 py-2 px-4 justify-center items-center gap-2 self-stretch rounded-[6px] bg-white"></button> */}
+                </NavigationMenuLink>
                 <NavigationMenuLink></NavigationMenuLink>
               </NavigationMenuContent>
             </NavigationMenuItem>

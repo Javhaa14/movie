@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -23,6 +23,8 @@ import {
 import { Searchmovie } from "@/components/ui/searchmovie";
 import { Genres } from "@/components/ui/genres";
 export const Navigation = ({ mode, handleonclick }: any) => {
+  const inputref = useRef("");
+
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
@@ -54,7 +56,6 @@ export const Navigation = ({ mode, handleonclick }: any) => {
       })
       .then((res) => setGenre(res.data.genres));
   }, []);
-  console.log(genre);
 
   return (
     <div className="flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center">
@@ -123,7 +124,7 @@ export const Navigation = ({ mode, handleonclick }: any) => {
 
           <Popover>
             <PopoverTrigger>
-              <Input></Input>
+              <Input ref={inputref}></Input>
             </PopoverTrigger>
             <PopoverContent className="flex w-[577px] h-fit p-3 flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] bg-white">
               {data?.slice(3, 8).map((value: any) => {

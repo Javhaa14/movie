@@ -3,6 +3,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import { Movie } from "./movie";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 export const List = ({ type, name, className }: any) => {
   const [data, setData] = useState([{}]);
 
@@ -19,6 +20,11 @@ export const List = ({ type, name, className }: any) => {
       .then((res) => setData(res.data.results));
   }, []);
   // const path= useRooter
+  const router = useRouter();
+
+  const handleonclick = (id: string) => {
+    router.push(`/detail/${id}`);
+  };
   return (
     <div
       className={`flex w-full h-[978px] gap-[32px] px-[80px] pt-6 flex-col ${className}`}>
@@ -33,6 +39,9 @@ export const List = ({ type, name, className }: any) => {
         {data?.slice(0, 10).map((value: any) => {
           return (
             <Movie
+              onclick={() => {
+                handleonclick(value.id);
+              }}
               key={value.title}
               name={value.title}
               image={`https://image.tmdb.org/t/p/original${value.poster_path}`}

@@ -51,10 +51,10 @@ export default function Home() {
         <Navigation mode={mode} handleonclick={handleonclick} />
         <Carousel className="w-full h-[600px] ">
           <CarouselContent>
-            {data?.slice(0, 3).map((value: any) => {
+            {data?.slice(0, 3).map((value: any, index: any) => {
               return (
                 <Nowplaying
-                  key={value.original_title}
+                  key={index}
                   src={value.backdrop_path}
                   title={value.original_title}
                   rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}

@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useReducer} from "react";
 import { Navigation } from "@/app/navigation";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 import {
   Carousel,
   CarouselContent,
@@ -42,6 +44,11 @@ export default function Home() {
   const handleonclick = () => {
     setMode(!mode);
   };
+  const router = useRouter();
+
+  const handleon = (id: string) => {
+    router.push(`/detail/${id}`);
+  };
   return (
     <div
       className={`flex flex-col w-screen h-screen gap-[74px] ${
@@ -54,6 +61,10 @@ export default function Home() {
             {data?.slice(0, 3).map((value: any, index: any) => {
               return (
                 <Nowplaying
+                onclick={() => {
+                  handleon(value.id);
+                  console.log(id);
+                }}
                   key={index}
                   src={value.backdrop_path}
                   title={value.original_title}

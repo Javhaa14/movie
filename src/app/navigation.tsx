@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/router";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -56,10 +57,13 @@ export const Navigation = ({ mode, handleonclick }: any) => {
       })
       .then((res) => setGenre(res.data.genres));
   }, []);
-
+//   const router = useRouter();
+// const goback=(()=>{
+//   router.push(``);
+// })
   return (
     <div className="flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center">
-      <div className="flex items-center gap-2 w-[92px] h-[20px]">
+      <a href="http://localhost:3000/" className="flex items-center gap-2 w-[92px] h-[20px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -76,7 +80,7 @@ export const Navigation = ({ mode, handleonclick }: any) => {
         <p className="text-4 text-[#4338CA] font-extrabold font-italic">
           Movie Z
         </p>
-      </div>
+      </a>
       <div className={`flex w-[488px] items-center gap-3`}>
         <NavigationMenu>
           <NavigationMenuList>

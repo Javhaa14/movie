@@ -14,10 +14,11 @@ interface propsType {
   rate: string;
   description: string;
   src: string;
+  onclick:()=>void
 }
-export const Nowplaying = ({ title, rate, description, src }: propsType) => {
+export const Nowplaying = ({ title, rate, description, src ,onclick}: propsType) => {
   return (
-    <CarouselItem className="w-full h-[600px] flex justify-center overflow-hidden relative">
+    <CarouselItem onClick={onclick} className="w-full h-[600px] flex justify-center overflow-hidden relative">
       <img
         id="slde-1"
         className="w-[1440px] h-[700px] absolute"

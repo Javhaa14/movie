@@ -21,7 +21,7 @@ export default function Detail({ params: { id } }: any) {
   type datatrailer = {
     name: String;
     type: String;
-    key: String;
+    key: Number;
   };
   console.log(id, "hi");
   const [data, setData] = useState<data[]>([]);
@@ -37,7 +37,6 @@ export default function Detail({ params: { id } }: any) {
     return rhours + "h " + rminutes + "min";
   }
 
-  console.log(timeConvert(200));
   useEffect(() => {
     axios
       .get(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, {
@@ -63,7 +62,7 @@ export default function Detail({ params: { id } }: any) {
           },
         }
       )
-      .then((res) => setDatatrailer(res.data.results[41]));
+      .then((res) => setDatatrailer(res.data.results[0]));
   }, []);
   console.log(datatrailer, "hi");
 
@@ -94,10 +93,10 @@ export default function Detail({ params: { id } }: any) {
   return (
     <div className="w-screen h-screen justify-center items-center">
       <Navigation />
-      <div className="flex w-full flex-col items-start gap-6 text-[#09090B] px-[80px]">
+      <div className="flex w-full flex-col items-start gap-6 text-[#09090B] py-10 px-[80px]">
         <div className="flex w-full pr-3 justify-between items-center self-stretch">
-          <div className="flex w-[211px] flex-col items-start gap-1">
-            <p className="self-stretch text-[36px] font-bold">{data.title}</p>
+          <div className="flex w-fit flex-col items-start gap-1">
+            <a href="https://hdplayer.icu/index.php?id=6574&key=146ff4" className="self-stretch w-fit text-[36px] font-bold">{data.title}</a>
             <p className="self-stretch text-[18px] w-[300px]">
               {data.release_date} · {data.adult == false ? "PG" : "R18+"} ·{" "}
               {timeConvert(data.runtime)}
@@ -175,21 +174,24 @@ export default function Detail({ params: { id } }: any) {
         </div>
         <div className="flex w-full flex-col items-start gap-8 text-[#09090B]">
           <div className="flex justify-between items-start self-stretch">
-            <p className="w-[198px] text-[24px] font-semibold"></p>
+            <p className="w-[198px] text-[24px] font-semibold">More Like This</p>
             <button className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+            
               <p className="text-[14px]">See more</p>
               <FaArrowRight className="size-[16px]" />
             </button>
           </div>
           <div className="flex items-start gap-8 self-stretch">
-            {datasimiliar?.slice(0, 5).map((value: any) => {
+            {datasimiliar?.slice(0, 5).map((value: Object,index:Number) => {
               return (
                 <Movie
                   onclick={() => {
                     handleonclick(value.id);
+                    console.log(id);
+                    
                   }}
                   className={"w-[190px] h-[373px]"}
-                  key={value}
+                  key={index}
                   image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
                   rating={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
                   name={value.title}

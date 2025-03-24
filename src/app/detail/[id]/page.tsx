@@ -19,16 +19,17 @@ export default function Detail({ params: { id } }: number) {
     runtime: String;
     vote_average: String;
   };
-  type datatrailer = {
+  type datatrailers = {
     name: String;
     type: String;
     key: Number;
   };
   console.log(id, "hi");
   const [data, setData] = useState<data[]>([]);
-  const [datatrailer, setDatatrailer] = useState<data[]>([]);
+  const [datatrailers, setDatatrailers] = useState<data[]>([]);
   const [datasimiliar, setDatasimiliar] = useState<data[]>([]);
-
+  const [datagenre, setDatagenre] = useState<data[]>([]);
+  const [datagenrelist, setDatagenrelist] = useState<data[]>([]);
   function timeConvert(n: number) {
     let num = n;
     let hours = num / 60;
@@ -63,15 +64,22 @@ export default function Detail({ params: { id } }: number) {
           },
         }
       )
-      .then((res) => setDatatrailer(res.data.results[0]));
+      .then((res) => setDatatrailers(res.data.results));
   }, []);
-  console.log(datatrailer, "hi");
+  console.log(datatrailers, "hi");
+const trailer=(array:any)=>{
+  for (let i = 0; i < array.length; i++) {
+    if(array[i].type=="Trailer"||array[i].name=="Official Trailer"){
+      return array[i].key
+    }
+  }
+}
+console.log(trailer(datatrailers),"key");
 
+  
   const [button, setButton] = useState(false);
   const handlebutton = () => {
-    setButton(!button);
-    console.log("hi");
-  };
+    setButton(!button);  };
   const router = useRouter();
   const handleonclick = (id: string) => {
     router.push(`/detail/${id}`);
@@ -94,6 +102,45 @@ export default function Detail({ params: { id } }: number) {
   const handle = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
+    console.log(data.title);
+
+let urlpzda=`https://api.themoviedb.org/3/search/movie?query=${data.title}&language=en-US&page=1
+`
+console.log(urlpzda);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${urlpzda}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
+          },
+        }
+      )
+      .then((res) => setDatagenre(res.data.results));
+  }, []);
+  
+console.log(datagenre,"genreid");
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/genre/movie/list?language=en`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
+          },
+        }
+      )
+      .then((res) => setDatagenrelist(res.data.genres));
+  }, []);
   return (
     <div className="w-screen h-screen justify-center items-center relative">
       <Navigation />
@@ -145,7 +192,7 @@ export default function Detail({ params: { id } }: number) {
             </div>
           </div>
         </div>
-        <div className="flex w-full justify-center items-center gap-8 self-stretch">
+        <div className="flex w-full justify-center items-center gap-8 self-stretch relative">
           <img
             className="w-[290px] h-[428px]"
             src={`https://image.tmdb.org/t/p/original${data.poster_path}`}></img>
@@ -154,18 +201,18 @@ export default function Detail({ params: { id } }: number) {
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/original${data.backdrop_path})`,
             }}></div>
-          <div className="flex brightness-100 pt-[300px] pr-[200px] w-fit items-center gap-3 text-white pl-6 absolute">
+          <div className="flex flex-row brightness-100 pt-[300px] pr-[200px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
             <button
               onClick={handlebutton}
               className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
               <CiPlay1 className="size-4 text-black" />
             </button>
             <p className="text-4 ">Play trailer </p>
-            <p className="text-[14px]">2:35</p>
+            <p className="text-[14px] pt-1">2:35</p>
           </div>
         </div>
         <iframe
-          src={`https://youtube.com/embed/${datatrailer.key}?si=UMWGenzXIx0OnlcK`}
+          src={`https://youtube.com/embed/${trailer(datatrailers)}?si=UMWGenzXIx0OnlcK`}
           className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
             button ? "flex" : "hidden"
           }`}></iframe>
@@ -198,7 +245,7 @@ export default function Detail({ params: { id } }: number) {
             </button>
           </div>
           <div className="flex items-start gap-8 self-stretch">
-            {datasimiliar?.slice(0, 6).map((value: Object, index: Number) => {
+            {datasimiliar?.slice(0, 5).map((value: Object, index: Number) => {
               return (
                 <Movie
                   onclick={() => {

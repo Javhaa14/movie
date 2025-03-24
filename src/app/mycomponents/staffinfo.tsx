@@ -44,48 +44,49 @@ export const Staffinfo = ({ id }: any) => {
         setData(res.data.crew), setData2(res.data.cast);
       });
   }, []);
-  console.log(data2);
   return (
     <div className="w-full">
-      <div className="flex flex-col items-start gap-1 self-stretch">
-        <div className="flex items-center gap-[53px] self-stretch text-[#09090B] text-4">
-          <p className="font-bold">Director</p>
-          {data?.map((a) =>
-            a.job === "Director" ? (
-              <p key={a.id} className="font-normal">
-                {a.name}
+      <div className="flex w-full flex-col items-start gap-1 self-stretch">
+        <div className="flex w-fit flex-row items-center gap-[50px] self-stretch text-[#09090B] text-4">
+          <p className="font-bold w-[50px]">Director</p>
+          <div className="gap-2 flex flex-row">{data.map((a) =>
+            a.job == "Director" ? (
+              <p key={a.id} className="flex font-normal w-fit self-stretch">
+                {a.name}  ·
               </p>
             ) : (
-              ""
+              <p className="hidden"></p>
             )
-          )}
+          )}</div>
+          
         </div>
         <div className="flex p-1 flex-col items-start gap-[10px] self-stretch">
           <div className="h-[1px] self-stretch border-[1px] solid text-[#E4E4E7]"></div>
         </div>
       </div>
       <div className="flex flex-col items-start gap-1 self-stretch">
-        <div className="flex items-center gap-[53px] self-stretch text-[#09090B] text-4">
-          <p className="font-bold">Writers</p>
-          {data?.splice(0, 3).map((a) =>
-            a.department === "Writing" ? (
+        <div className="flex items-center gap-[50px] self-stretch text-[#09090B] text-4">
+          <p className="font-bold w-[50px]">Writers</p>
+          <div className="flex gap-2">{data.map((a) =>
+            a.department === "Writing" && a.known_for_department==="Writing" ? (
               <p key={a.id} className="font-normal">
-                {a.name} ·
+                {a.name}  ·
               </p>
             ) : (
-              ""
+              <p className="hidden"></p>
             )
-          )}
+          )}</div>
+          
         </div>
         <div className="flex p-1 flex-col items-start gap-[10px] self-stretch">
           <div className="h-[1px] self-stretch border-[1px] solid text-[#E4E4E7]"></div>
         </div>
       </div>
       <div className="flex w-full flex-col items-start gap-1 self-stretch">
-        <div className="flex items-center gap-[75px] self-stretch text-[#09090B] text-4">
-          <p className="font-bold">Stars</p>
+        <div className="flex items-center gap-[50px] self-stretch text-[#09090B] text-4">
+          <p className="font-bold w-[50px]">Stars</p>
           <div className="flex flex-row gap-2">
-            {data2.slice(0, 3).map((a) => {
+            {data2.slice(0, 5).map((a) => {
               return (
                 <p key={a.id} className="font-normal">
                   {a.name} ·

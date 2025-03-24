@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState ,useReducer} from "react";
+import { useEffect, useState } from "react";
 import { Navigation } from "@/app/navigation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Autoplay from "embla-carousel-autoplay";
 
 import {
   Carousel,
@@ -49,6 +50,9 @@ export default function Home() {
   const handleon = (id: string) => {
     router.push(`/detail/${id}`);
   };
+  const handle = (id: string) => {
+    router.push(`/morelikethis/${id}`);
+  };
   return (
     <div
       className={`flex flex-col w-screen h-screen gap-[74px] ${
@@ -56,15 +60,22 @@ export default function Home() {
       }`}>
       <section className="flex flex-col w-full h-[600px] gap-6">
         <Navigation mode={mode} handleonclick={handleonclick} />
-        <Carousel className="w-full h-[600px] ">
+        <Carousel
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="w-full h-[600px] ">
           <CarouselContent>
-            {data?.slice(0, 3).map((value: any, index: any) => {
+            {data?.slice(0, 5).map((value: any, index: any) => {
               return (
                 <Nowplaying
-                onclick={() => {
-                  handleon(value.id);
-                  console.log(id);
-                }}
+                  data={data}
+                  onclick={() => {
+                    handleon(value.id);
+                    console.log(id);
+                  }}
                   key={index}
                   src={value.backdrop_path}
                   title={value.original_title}
@@ -81,6 +92,7 @@ export default function Home() {
       {sectiondata.map((value) => {
         return (
           <List
+            seemore={handle}
             className={`${
               mode ? "bg-white text-[#09090B]" : "bg-black text-white"
             }`}

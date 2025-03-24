@@ -9,8 +9,9 @@ import { Staffinfo } from "@/app/mycomponents/staffinfo";
 import { Genres } from "@/components/ui/genres";
 import { CiPlay1 } from "react-icons/ci";
 import { Movie } from "@/components/ui/movie";
+import { MdCancel } from "react-icons/md";
 
-export default function Detail({ params: { id } }: any) {
+export default function Detail({ params: { id } }: number) {
   type data = {
     adult: Boolean;
     title: String;
@@ -90,13 +91,20 @@ export default function Detail({ params: { id } }: any) {
       )
       .then((res) => setDatasimiliar(res.data.results));
   }, []);
+  const handle = (id: string) => {
+    router.push(`/morelikethis/${id}`);
+  };
   return (
-    <div className="w-screen h-screen justify-center items-center">
+    <div className="w-screen h-screen justify-center items-center relative">
       <Navigation />
-      <div className="flex w-full flex-col items-start gap-6 text-[#09090B] py-10 px-[80px]">
+      <div className="flex w-full justify-center flex-col items-start gap-6 text-[#09090B] py-10 px-[80px]">
         <div className="flex w-full pr-3 justify-between items-center self-stretch">
           <div className="flex w-fit flex-col items-start gap-1">
-            <a href="https://hdplayer.icu/index.php?id=6574&key=146ff4" className="self-stretch w-fit text-[36px] font-bold">{data.title}</a>
+            <a
+              href="https://hdplayer.icu/index.php?id=6574&key=146ff4"
+              className="self-stretch w-fit text-[36px] font-bold">
+              {data.title}
+            </a>
             <p className="self-stretch text-[18px] w-[300px]">
               {data.release_date} · {data.adult == false ? "PG" : "R18+"} ·{" "}
               {timeConvert(data.runtime)}
@@ -137,7 +145,7 @@ export default function Detail({ params: { id } }: any) {
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center gap-8 self-stretch">
+        <div className="flex w-full justify-center items-center gap-8 self-stretch">
           <img
             className="w-[290px] h-[428px]"
             src={`https://image.tmdb.org/t/p/original${data.poster_path}`}></img>
@@ -145,50 +153,57 @@ export default function Detail({ params: { id } }: any) {
             className="flex items-end pb-[24px] w-[760px] h-[428px] bg-cover brightness-70 rounded-sm"
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/original${data.backdrop_path})`,
-            }}>
-            <div className="flex brightness-100 w-fit items-center gap-3 text-white pl-6">
-              <button
-                onClick={handlebutton}
-                className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
-                <CiPlay1 className="size-4 text-black" />
-              </button>
-              <p className="text-4 ">Play trailer </p>
-              <p className="text-[14px]">2:35</p>
-            </div>
+            }}></div>
+          <div className="flex brightness-100 pt-[300px] pr-[200px] w-fit items-center gap-3 text-white pl-6 absolute">
+            <button
+              onClick={handlebutton}
+              className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
+              <CiPlay1 className="size-4 text-black" />
+            </button>
+            <p className="text-4 ">Play trailer </p>
+            <p className="text-[14px]">2:35</p>
           </div>
         </div>
         <iframe
           src={`https://youtube.com/embed/${datatrailer.key}?si=UMWGenzXIx0OnlcK`}
-          className={`w-[997px] h-[561px] aspect-video absolute ${
+          className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
             button ? "flex" : "hidden"
           }`}></iframe>
-
-        <div className="flex w-[1080px] flex-col items-start gap-5 text-[#09090B]">
+        <button
+          onClick={handlebutton}
+          className="flex ml-[83%] mb-[85%] absolute w-fit h-fit justify-center items-center rounded-full bg-white">
+          <MdCancel
+            className={`size-10 text-black aspect-video ${
+              button ? "flex" : "hidden"
+            }`}
+          />
+        </button>
+        <div className="flex w-full flex-col items-start gap-5 text-[#09090B]">
           <div className="flex items-center gap-3">
             <Genres genre="Fairy Tale" />
           </div>
-          <p className="self-stretch text-[16px]">{data.overview}</p>
+          <p className="w-full self-stretch text-[16px]">{data.overview}</p>
           <div className="flex flex-col items-start gap-5 self-stretch">
             <Staffinfo id={id} />
           </div>
         </div>
         <div className="flex w-full flex-col items-start gap-8 text-[#09090B]">
           <div className="flex justify-between items-start self-stretch">
-            <p className="w-[198px] text-[24px] font-semibold">More Like This</p>
+            <p className="w-[198px] text-[24px] font-semibold">
+              More Like This
+            </p>
             <button className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
-            
               <p className="text-[14px]">See more</p>
               <FaArrowRight className="size-[16px]" />
             </button>
           </div>
           <div className="flex items-start gap-8 self-stretch">
-            {datasimiliar?.slice(0, 5).map((value: Object,index:Number) => {
+            {datasimiliar?.slice(0, 6).map((value: Object, index: Number) => {
               return (
                 <Movie
                   onclick={() => {
                     handleonclick(value.id);
                     console.log(id);
-                    
                   }}
                   className={"w-[190px] h-[373px]"}
                   key={index}

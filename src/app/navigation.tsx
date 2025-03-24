@@ -1,6 +1,8 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, ChangeEvent, use } from "react";
+import { useDebounce } from "@uidotdev/usehooks";
+
 import { useRouter } from "next/router";
 import {
   NavigationMenu,
@@ -23,6 +25,7 @@ import {
 } from "@/components/ui/popover";
 import { Searchmovie } from "@/components/ui/searchmovie";
 import { Genres } from "@/components/ui/genres";
+
 export const Navigation = ({ mode, handleonclick }: any) => {
   const inputref = useRef("");
 
@@ -31,7 +34,7 @@ export const Navigation = ({ mode, handleonclick }: any) => {
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/search/movie?query=Mark&language=en-US&page=1`,
+        `https://api.themoviedb.org/3/search/movie?query=${debouncedInputvalue}&language=en-US&page=1`,
         {
           method: "GET",
           headers: {
@@ -57,13 +60,23 @@ export const Navigation = ({ mode, handleonclick }: any) => {
       })
       .then((res) => setGenre(res.data.genres));
   }, []);
-//   const router = useRouter();
-// const goback=(()=>{
-//   router.push(``);
-// })
+  //   const router = useRouter();
+  // const goback=(()=>{
+  //   router.push(``);
+  // })
+  const [inputvalue, setInputvalue] = useState("");
+  const debouncedInputvalue = useDebounce(inputvalue, 500);
+  const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputvalue(event.target.value);
+    // useDebounce(() => setInputvalue(event.target.value), 500);
+  };
+  console.log("rerendering", debouncedInputvalue);
+
   return (
     <div className="flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center">
-      <a href="http://localhost:3000/" className="flex items-center gap-2 w-[92px] h-[20px]">
+      <a
+        href="http://localhost:3000/"
+        className="flex items-center gap-2 w-[92px] h-[20px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -128,15 +141,16 @@ export const Navigation = ({ mode, handleonclick }: any) => {
 
           <Popover>
             <PopoverTrigger>
-              <Input ref={inputref}></Input>
+              <Input onChange={handleonchange}></Input>
             </PopoverTrigger>
+
             <PopoverContent className="flex w-[577px] h-fit p-3 flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] bg-white">
               {data?.slice(3, 8).map((value: any) => {
                 return (
                   <Searchmovie
                     key={value.original_title}
                     src={`https://image.tmdb.org/t/p/original${value.poster_path}`}
-                    title={value.original_title}
+                    title={value.debouncedInputvalue}
                     rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
                     date={value.release_date?.slice(0, 4)}
                   />
@@ -144,7 +158,7 @@ export const Navigation = ({ mode, handleonclick }: any) => {
               })}
               <div className="flex h-10 py-2 px-4 justify-center items-center gap-2 rounded-md bg-white">
                 <p className="text-[14px] font-medium">
-                  See all results for {data[0].original_title}
+                  See all results for {data[0]?.original_title}
                 </p>
               </div>
             </PopoverContent>

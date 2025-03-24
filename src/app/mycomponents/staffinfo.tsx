@@ -46,7 +46,7 @@ export const Staffinfo = ({ id }: any) => {
   }, []);
   console.log(data2);
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-col items-start gap-1 self-stretch">
         <div className="flex items-center gap-[53px] self-stretch text-[#09090B] text-4">
           <p className="font-bold">Director</p>
@@ -70,7 +70,7 @@ export const Staffinfo = ({ id }: any) => {
           {data?.splice(0, 3).map((a) =>
             a.department === "Writing" ? (
               <p key={a.id} className="font-normal">
-                {a.name} · 
+                {a.name} ·
               </p>
             ) : (
               ""
@@ -81,19 +81,20 @@ export const Staffinfo = ({ id }: any) => {
           <div className="h-[1px] self-stretch border-[1px] solid text-[#E4E4E7]"></div>
         </div>
       </div>
-      <div className="flex flex-col items-start gap-1 self-stretch">
+      <div className="flex w-full flex-col items-start gap-1 self-stretch">
         <div className="flex items-center gap-[75px] self-stretch text-[#09090B] text-4">
           <p className="font-bold">Stars</p>
-          <div className="flex flex-row gap-2">{data2.slice(0, 3).map((a) => {
-            return (
-              <p key={a.id} className="font-normal">
-                {a.name}  · 
-              </p>
-            );
-          })}</div>
-          
+          <div className="flex flex-row gap-2">
+            {data2.slice(0, 3).map((a) => {
+              return (
+                <p key={a.id} className="font-normal">
+                  {a.name} ·
+                </p>
+              );
+            })}
+          </div>
         </div>
-        <div className="flex p-1 flex-col items-start gap-[10px] self-stretch">
+        <div className="w-full flex p-1 flex-col items-start gap-[10px] self-stretch">
           <div className="h-[1px] self-stretch border-[1px] solid text-[#E4E4E7]"></div>
         </div>
       </div>

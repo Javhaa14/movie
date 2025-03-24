@@ -4,7 +4,7 @@ import { Movie } from "./movie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-export const List = ({ type, name, className }: any) => {
+export const List = ({ type, name, className, seemore }: any) => {
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
@@ -29,8 +29,9 @@ export const List = ({ type, name, className }: any) => {
       className={`flex w-full h-[978px] gap-[32px] px-[80px] pt-6 flex-col ${className}`}>
       <div className={`flex w-full justify-between items-start${className}`}>
         <p className="text-[24px]">{name}</p>
-        <button className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
-          <p className="text-[14px]">More Like This</p>
+        <button
+          onClick={() => seemore(type)}
+          className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
           <p className="text-[14px]">See more</p>
           <FaArrowRight className="size-[16px]" />
         </button>

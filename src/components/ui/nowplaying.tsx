@@ -14,13 +14,23 @@ interface propsType {
   rate: string;
   description: string;
   src: string;
-  onclick:()=>void
+  onclick: () => void;
+  data: object;
 }
-export const Nowplaying = ({ title, rate, description, src ,onclick}: propsType) => {
+export const Nowplaying = ({
+  title,
+  rate,
+  description,
+  src,
+  onclick,
+  data,
+}: propsType) => {
   return (
-    <CarouselItem onClick={onclick} className="w-full h-[600px] flex justify-center overflow-hidden relative">
+    <CarouselItem
+      onClick={onclick}
+      className="w-full h-[600px] flex justify-center overflow-hidden relative">
       <img
-        id="slde-1"
+        id={`slde-1`}
         className="w-[1440px] h-[700px] absolute"
         src={`https://image.tmdb.org/t/p/original${src}`}></img>
       <div className="flex flex-col items-start gap-4 absolute left-[140px] bottom-[158px] text-white">
@@ -43,10 +53,14 @@ export const Nowplaying = ({ title, rate, description, src ,onclick}: propsType)
           <p className="text-[#18181B] text-[14px] font-[400]">Watch Trailer</p>
         </button>
       </div>
-      <div className="inline-flex items-center gap-2 absolute top-140">
-        <a className="size-2 rounded-[50%] bg-[#fff]" href="#slde-1"></a>
-        <a className="size-2 rounded-[50%] bg-[#ffffffcc]" href="#slde-2"></a>
-        <a className="size-2 rounded-[50%] bg-[#ffffffcc]" href="#slde-3"></a>
+      <div className="inline-flex w-full items-center gap-2 absolute top-140 justify-center">
+        {data?.slice(0, 5).map(() => {
+          return (
+            <a
+              className="size-3 rounded-[50%] bg-[#808080] hover:bg-white"
+              href="#slde-1"></a>
+          );
+        })}
       </div>
     </CarouselItem>
   );

@@ -25,8 +25,10 @@ import {
 } from "@/components/ui/popover";
 import { Searchmovie } from "@/components/ui/searchmovie";
 import { Genres } from "@/components/ui/genres";
+import { useMode } from "./modecontext";
 
-export const Navigation = ({ mode, handleonclick }: any) => {
+export const Navigation = () => {
+  const { mode, toggleMode } = useMode();
   const inputref = useRef("");
 
   const [data, setData] = useState([{}]);
@@ -73,7 +75,10 @@ export const Navigation = ({ mode, handleonclick }: any) => {
   console.log("rerendering", debouncedInputvalue);
 
   return (
-    <div className="flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center">
+    <div
+      className={`flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center ${
+        mode ? "bg-white text-red" : "bg-black text-white"
+      }`}>
       <a
         href="http://localhost:3000/"
         className="flex items-center gap-2 w-[92px] h-[20px]">
@@ -166,7 +171,7 @@ export const Navigation = ({ mode, handleonclick }: any) => {
         </div>
       </div>
       <button
-        onClick={handleonclick}
+        onClick={toggleMode}
         className={`flex justify-center items-center size-[36px] rounded-md border-[1px] solid border-[#E4E4E7] ${
           mode ? "bg-white" : "bg-black"
         } shadow-sm`}>

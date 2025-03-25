@@ -1,17 +1,18 @@
 "use client";
 import { FaArrowRight } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Navigation } from "@/app/navigation";
-import { Footer } from "../../footer";
 import { Staffinfo } from "@/app/mycomponents/staffinfo";
 import { Genres } from "@/components/ui/genres";
 import { CiPlay1 } from "react-icons/ci";
 import { Movie } from "@/components/ui/movie";
 import { MdCancel } from "react-icons/md";
+import { useMode } from "@/app/modecontext";
 
-export default function Detail({ params: { id } }: number) {
+export default function Detail({ params: { id } }: string) {
+  const { mode, toggleMode } = useMode();
+  const params = useParams();
   type data = {
     adult: Boolean;
     title: String;
@@ -29,7 +30,6 @@ export default function Detail({ params: { id } }: number) {
   const [datatrailers, setDatatrailers] = useState<data[]>([]);
   const [datasimiliar, setDatasimiliar] = useState<data[]>([]);
   const [datagenre, setDatagenre] = useState<data[]>([]);
-  const [datagenrelist, setDatagenrelist] = useState<data[]>([]);
   function timeConvert(n: number) {
     let num = n;
     let hours = num / 60;
@@ -41,7 +41,7 @@ export default function Detail({ params: { id } }: number) {
 
   useEffect(() => {
     axios
-      .get(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, {
+      .get(`https://api.themoviedb.org/3/movie/${params.id}?language=en-US`, {
         method: "GET",
         headers: {
           accept: "application/json",
@@ -67,23 +67,24 @@ export default function Detail({ params: { id } }: number) {
       .then((res) => setDatatrailers(res.data.results));
   }, []);
   console.log(datatrailers, "hi");
-const trailer=(array:any)=>{
-  for (let i = 0; i < array.length; i++) {
-    if(array[i].type=="Trailer"||array[i].name=="Official Trailer"){
-      return array[i].key
+  const trailer = (array: any) => {
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].type == "Trailer" || array[i].name == "Official Trailer") {
+        return array[i].key;
+      }
     }
-  }
-}
-console.log(trailer(datatrailers),"key");
+  };
+  console.log(trailer(datatrailers), "key");
 
-  
   const [button, setButton] = useState(false);
   const handlebutton = () => {
-    setButton(!button);  };
+    setButton(!button);
+  };
   const router = useRouter();
   const handleonclick = (id: string) => {
     router.push(`/detail/${id}`);
   };
+
   useEffect(() => {
     axios
       .get(
@@ -102,49 +103,27 @@ console.log(trailer(datatrailers),"key");
   const handle = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
-    console.log(data.title);
-
-let urlpzda=`https://api.themoviedb.org/3/search/movie?query=${data.title}&language=en-US&page=1
-`
-console.log(urlpzda);
+  console.log(data.title);
 
   useEffect(() => {
     axios
-      .get(
-        `${urlpzda}`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
-      .then((res) => setDatagenre(res.data.results));
+      .get(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
+        },
+      })
+      .then((res) => setDatagenre(res.data.genres));
   }, []);
-  
-console.log(datagenre,"genreid");
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/genre/movie/list?language=en`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
-      .then((res) => setDatagenrelist(res.data.genres));
-  }, []);
   return (
-    <div className="w-screen h-screen justify-center items-center relative">
-      <Navigation />
-      <div className="flex w-full justify-center flex-col items-start gap-6 text-[#09090B] py-10 px-[80px]">
+    <div className="w-screen h-fit justify-center items-center relative">
+      <div
+        className={`flex w-full justify-center flex-col items-start gap-6 py-10 px-[80px] ${
+          mode ? "text-[#09090B]" : "text-[#FFF]"
+        }`}>
         <div className="flex w-full pr-3 justify-between items-center self-stretch">
           <div className="flex w-fit flex-col items-start gap-1">
             <a
@@ -212,7 +191,9 @@ console.log(datagenre,"genreid");
           </div>
         </div>
         <iframe
-          src={`https://youtube.com/embed/${trailer(datatrailers)}?si=UMWGenzXIx0OnlcK`}
+          src={`https://youtube.com/embed/${trailer(
+            datatrailers
+          )}?si=UMWGenzXIx0OnlcK`}
           className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
             button ? "flex" : "hidden"
           }`}></iframe>
@@ -225,26 +206,35 @@ console.log(datagenre,"genreid");
             }`}
           />
         </button>
-        <div className="flex w-full flex-col items-start gap-5 text-[#09090B]">
+        <div
+          className={`flex w-full flex-col items-start gap-5 ${
+            mode ? "text-[#09090B]" : "text-[#FFF]"
+          }`}>
           <div className="flex items-center gap-3">
-            <Genres genre="Fairy Tale" />
+            {datagenre.map((value: any) => {
+              return <Genres key={value.id} genre={value.name} />;
+            })}
           </div>
           <p className="w-full self-stretch text-[16px]">{data.overview}</p>
-          <div className="flex flex-col items-start gap-5 self-stretch">
-            <Staffinfo id={id} />
+          <div className={`flex flex-col items-start gap-5 self-stretch `}>
+            <Staffinfo id={id} mode={mode} />
           </div>
         </div>
-        <div className="flex w-full flex-col items-start gap-8 text-[#09090B]">
+        <div className="flex w-full flex-col items-start gap-8 ">
           <div className="flex justify-between items-start self-stretch">
             <p className="w-[198px] text-[24px] font-semibold">
               More Like This
             </p>
-            <button className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+            <button
+              onClick={() => {
+                handle(id);
+              }}
+              className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
               <p className="text-[14px]">See more</p>
               <FaArrowRight className="size-[16px]" />
             </button>
           </div>
-          <div className="flex items-start gap-8 self-stretch">
+          <div className={`flex items-start gap-8 self-stretch `}>
             {datasimiliar?.slice(0, 5).map((value: Object, index: Number) => {
               return (
                 <Movie
@@ -263,7 +253,6 @@ console.log(datagenre,"genreid");
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

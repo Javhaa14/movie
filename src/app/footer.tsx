@@ -2,7 +2,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 export const Footer = ({}) => {
   return (
-    <footer className="flex w-full h-[280px] py-[40px] justify-center items-start gap-[48px] bg-[#4338CA] text-[#FAFAFA]">
+    <footer className="flex w-full h-[280px] py-[40px] justify-center items-start gap-[48px] bg-[#4338CA] text-[#FAFAFA] ">
       <div className="w-full flex flex-row justify-between items-start px-20">
         <div className="flex flex-col w-[300px] items-start gap-3 self-stretch">
           <div className="flex flex-row items-center gap-2 w-[109px]">

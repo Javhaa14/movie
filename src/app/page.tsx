@@ -1,10 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Navigation } from "@/app/navigation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay";
-
 import {
   Carousel,
   CarouselContent,
@@ -13,18 +11,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { List } from "@/components/ui/list";
-
 import { Nowplaying } from "@/components/ui/nowplaying";
-
-import { Footer } from "@/app/footer";
+import { useMode } from "./modecontext";
 
 export default function Home() {
+  const { mode, toggleMode } = useMode();
+
   const [data, setData] = useState([{}]);
 
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/now_playing?&api_key=d67d8bebd0f4ff345f6505c99e9d0289language=en-US&page=1`,
+        `https://api.themoviedb.org/3/movie/now_playing?&api_key=d67d8bebd0f4ff345f6505c99e9d0289&language=en-US&page=1`,
         {
           method: "GET",
           headers: {
@@ -36,30 +34,29 @@ export default function Home() {
       )
       .then((res) => setData(res.data.results));
   }, []);
+
   const sectiondata = [
     { name: "Upcoming", path: "upcoming" },
     { name: "Popular", path: "popular" },
     { name: "Top rated", path: "top_rated" },
   ];
-  const [mode, setMode] = useState(true);
-  const handleonclick = () => {
-    setMode(!mode);
-  };
+
   const router = useRouter();
 
   const handleon = (id: string) => {
     router.push(`/detail/${id}`);
   };
+
   const handle = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
+
   return (
     <div
-      className={`flex flex-col w-screen h-screen gap-[74px] ${
+      className={`flex flex-col w-screen h-fit mt-6 mb-[71px] gap-[73px] ${
         mode ? "bg-white" : "bg-black"
       }`}>
       <section className="flex flex-col w-full h-[600px] gap-6">
-        <Navigation mode={mode} handleonclick={handleonclick} />
         <Carousel
           plugins={[
             Autoplay({
@@ -74,7 +71,7 @@ export default function Home() {
                   data={data}
                   onclick={() => {
                     handleon(value.id);
-                    console.log(id);
+                    console.log(value.id);
                   }}
                   key={index}
                   src={value.backdrop_path}
@@ -102,7 +99,6 @@ export default function Home() {
           />
         );
       })}
-      <Footer />
     </div>
   );
 }

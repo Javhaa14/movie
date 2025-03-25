@@ -14,9 +14,9 @@ export const Movie = ({
   return (
     <div
       onClick={onclick}
-      className={`flex flex-col items-start gap-1 rounded-xl bg-[#F4F4F5] w-[230px] h-[439px] overflow-scroll ${className}`}>
+      className={`flex flex-col items-start gap-1 rounded-xl  w-[230px] h-[439px] overflow-scroll brightness-100 hover:brightness-90 ${className}`}>
       <img className="w-[230px] h-[340px] rounded-t-xl" src={image}></img>
-      <div className="flex p-2 flex-col items-start self-stretch">
+      <div className={`flex p-2 flex-col items-start self-stretch `}>
         <div className="flex h-[23px] items-start gap-1 self-stretch">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,13 +44,11 @@ export const Movie = ({
               </clipPath>
             </defs>
           </svg>
-          <p className="text-[#09090B] text-[14px] ">{rating}</p>
+          <p className="text-[14px] ">{rating}</p>
           <p className="text-[#71717A] text-[12px]">/10</p>
         </div>
         <div className="flex justify-center items-center gap-[10px] self-stretch">
-          <p className="overflow-hidden text-ellipsis text-[#09090B] text-[18px]">
-            {name}
-          </p>
+          <p className="overflow-hidden text-ellipsis text-[18px]">{name}</p>
         </div>
       </div>
     </div>

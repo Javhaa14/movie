@@ -18,7 +18,7 @@ import { Nowplaying } from "@/components/ui/nowplaying";
 
 import { Footer } from "@/app/footer";
 
-export default function Home() {
+export default function Searchresults() {
   const [data, setData] = useState([{}]);
 
   //   useEffect(() => {

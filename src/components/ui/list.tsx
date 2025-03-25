@@ -4,8 +4,11 @@ import { Movie } from "./movie";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useMode } from "@/app/modecontext";
+
 export const List = ({ type, name, className, seemore }: any) => {
   const [data, setData] = useState([{}]);
+  const { mode, toggleMode } = useMode();
 
   useEffect(() => {
     axios
@@ -40,7 +43,11 @@ export const List = ({ type, name, className, seemore }: any) => {
         {data?.slice(0, 10).map((value: any) => {
           return (
             <Movie
-              className={"w-[229px] h-[439px]"}
+              className={`w-[190px] h-[373px] ${
+                mode
+                  ? "text-[#09090B] bg-[#F4F4F5]"
+                  : "text-[#FFF] bg-[#222222]"
+              }`}
               onclick={() => {
                 handleonclick(value.id);
               }}

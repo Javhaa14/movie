@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay";
@@ -13,7 +13,7 @@ import {
 import { List } from "@/components/ui/list";
 import { Nowplaying } from "@/components/ui/nowplaying";
 import { useMode } from "./modecontext";
-
+import { Pageskel } from "@/components/ui/pageskel";
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
@@ -52,53 +52,55 @@ export default function Home() {
   };
 
   return (
-    <div
-      className={`flex flex-col w-screen h-fit mt-6 mb-[71px] gap-[73px] ${
-        mode ? "bg-white" : "bg-black"
-      }`}>
-      <section className="flex flex-col w-full h-[600px] gap-6">
-        <Carousel
-          plugins={[
-            Autoplay({
-              delay: 5000,
-            }),
-          ]}
-          className="w-full h-[600px] ">
-          <CarouselContent>
-            {data?.slice(0, 5).map((value: any, index: any) => {
-              return (
-                <Nowplaying
-                  data={data}
-                  onclick={() => {
-                    handleon(value.id);
-                    console.log(value.id);
-                  }}
-                  key={index}
-                  src={value.backdrop_path}
-                  title={value.original_title}
-                  rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
-                  description={value.overview}
-                />
-              );
-            })}
-          </CarouselContent>
-          <CarouselPrevious className="ml-[100px] mt-[50px]" />
-          <CarouselNext className="mr-[100px] mt-[50px]" />
-        </Carousel>
-      </section>
-      {sectiondata.map((value) => {
-        return (
-          <List
-            seemore={handle}
-            className={`${
-              mode ? "bg-white text-[#09090B]" : "bg-black text-white"
-            }`}
-            key={value.name}
-            type={value.path}
-            name={value.name}
-          />
-        );
-      })}
-    </div>
+    <Suspense fallback={<Pageskel />}>
+      <div
+        className={`flex flex-col w-screen h-fit mt-6 mb-[71px] gap-[73px] ${
+          mode ? "bg-white" : "bg-black"
+        }`}>
+        <section className="flex flex-col w-full h-[600px] gap-6">
+          <Carousel
+            plugins={[
+              Autoplay({
+                delay: 5000,
+              }),
+            ]}
+            className="w-full h-[600px] ">
+            <CarouselContent>
+              {data?.slice(0, 5).map((value: any, index: any) => {
+                return (
+                  <Nowplaying
+                    data={data}
+                    onclick={() => {
+                      handleon(value.id);
+                      console.log(value.id);
+                    }}
+                    key={index}
+                    src={value.backdrop_path}
+                    title={value.original_title}
+                    rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
+                    description={value.overview}
+                  />
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="ml-[100px] mt-[50px]" />
+            <CarouselNext className="mr-[100px] mt-[50px]" />
+          </Carousel>
+        </section>
+        {sectiondata.map((value) => {
+          return (
+            <List
+              seemore={handle}
+              className={`${
+                mode ? "bg-white text-[#09090B]" : "bg-black text-white"
+              }`}
+              key={value.name}
+              type={value.path}
+              name={value.name}
+            />
+          );
+        })}
+      </div>
+    </Suspense>
   );
 }

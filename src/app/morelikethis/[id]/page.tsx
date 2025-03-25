@@ -106,10 +106,13 @@ export default function Morelike({
   };
 
   return (
-    <div className="w-screen h-fit flex flex-col gap-[52px]">
-      <div className="flex px-[80px] w-full flex-col items-start gap-[32px] text-[#09090B]">
+    <div className="w-screen h-fit flex flex-col mt-[52px] ">
+      <div
+        className={`flex px-[80px] w-full flex-col items-start gap-[32px] mb-[32px] ${
+          mode ? "text-[#09090B]" : "text-[#FFF]"
+        }`}>
         <div className="flex justify-between items-start self-stretch">
-          <p className="w-[198px] text-[24px] font-semibold">More Like This</p>
+          <p className="w-[198px] text-[30px] font-semibold">More Like This</p>
         </div>
 
         <div className="w-full h-full grid grid-cols-5 gap-8">
@@ -139,7 +142,7 @@ export default function Morelike({
         </div>
       </div>
       <div
-        className={`flex w-full flex-col justify-end items-end gap-[10px] self-stretch mb-8 ${
+        className={`flex w-full flex-col justify-end items-end gap-[10px] self-stretch mb-[76px] ${
           mode ? "text-[#09090B]" : "text-[#FFF]"
         }`}>
         <Pagination>

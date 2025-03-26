@@ -1,20 +1,19 @@
-import * as React from "react";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
-import { cn } from "@/lib/utils";
-
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export const Input = ({ change, mode }: any) => {
   return (
-    <input
-      type={type}
-      data-slot="input"
-      placeholder="Search..."
-      className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      )}
-      {...props}
-    />
+    <div
+      className={`flex w-[379px] px-[12px] py-[0px] items-center gap-[10px] rounded-lg border-[1px] solid border-[#E4E4E7] focus-visible:outline-white ${
+        mode ? "bg-white text-black" : "bg-black text-white"
+      }`}>
+      <FaMagnifyingGlass
+        className={`${mode ? "text-[#09090B]" : "text-[#fff]"}`}
+      />
+      <input
+        onChange={change}
+        className="w-full flex py-2 items-center gap-[10px]"
+        type="text"
+        placeholder="Search..."></input>
+    </div>
   );
-}
-
-export { Input };
+};

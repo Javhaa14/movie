@@ -104,7 +104,7 @@ export default function Detail({ params: { id } }: string) {
   const handle = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
-  console.log(data.title);
+  console.log(data?.title);
 
   useEffect(() => {
     axios
@@ -198,7 +198,8 @@ export default function Detail({ params: { id } }: string) {
             )}?si=UMWGenzXIx0OnlcK`}
             className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
               button ? "flex" : "hidden"
-            } ${button ? "brightness-200" : "brigthness-100"}`}></iframe>
+            } `}></iframe>
+          {/* ${button ? "brightness-200" : "brigthness-100"} */}
           <button
             onClick={handlebutton}
             className="flex mt-[7%] ml-[83%] mb-[90%] absolute w-fit h-fit justify-center items-center rounded-full bg-white">
@@ -240,7 +241,7 @@ export default function Detail({ params: { id } }: string) {
               {datasimiliar?.slice(0, 5).map((value: Object, index: Number) => {
                 return (
                   <Movie
-                    className={`w-[190px] h-[373px] ${
+                    className={`w-[190px] h-[372px] ${
                       mode
                         ? "text-[#09090B] bg-[#F4F4F5]"
                         : "text-[#FFF] bg-[#222222]"

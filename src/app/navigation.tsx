@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState, useRef, ChangeEvent, use } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
 import { WiNightClear } from "react-icons/wi";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdSunny } from "react-icons/md";
 import {
   Popover,
@@ -32,6 +31,12 @@ export const Navigation = () => {
   const inputref = useRef("");
 
   const [data, setData] = useState([{}]);
+  const [inputvalue, setInputvalue] = useState("");
+  const debouncedInputvalue = useDebounce(inputvalue, 500);
+  const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputvalue(event.target.value);
+  };
+  console.log("rerendering", debouncedInputvalue);
 
   useEffect(() => {
     axios
@@ -47,7 +52,9 @@ export const Navigation = () => {
         }
       )
       .then((res) => setData(res.data.results));
-  }, []);
+  }, [debouncedInputvalue]);
+  console.log(data, "hi");
+
   const [genre, setGenre] = useState([]);
 
   useEffect(() => {
@@ -62,17 +69,18 @@ export const Navigation = () => {
       })
       .then((res) => setGenre(res.data.genres));
   }, []);
-  //   const router = useRouter();
+  const router = useRouter();
+  const handletosearchresults = (id: string) => {
+    router.push(`/searchresults/${id}`);
+    setInputvalue("");
+  };
   // const goback=(()=>{
   //   router.push(``);
   // })
-  const [inputvalue, setInputvalue] = useState("");
-  const debouncedInputvalue = useDebounce(inputvalue, 500);
-  const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputvalue(event.target.value);
-    // useDebounce(() => setInputvalue(event.target.value), 500);
+  const handletodetail = (id: string) => {
+    router.push(`/detail/${id}`);
+    setInputvalue("");
   };
-  console.log("rerendering", debouncedInputvalue);
 
   return (
     <div
@@ -138,36 +146,46 @@ export const Navigation = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <Input mode={mode} change={handleonchange}></Input>
+
         <div
-          className={`flex w-[379px] py-0 px-3 items-center gap--[10px] rounded-2xl border-[1px] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] ${
-            mode ? "bg-white text-red" : "bg-black text-white"
-          }`}>
-          <FaMagnifyingGlass className="opacity-[0.5]" />
-
-          <Popover>
-            <PopoverTrigger>
-              <Input onChange={handleonchange}></Input>
-            </PopoverTrigger>
-
-            <PopoverContent className="flex w-[577px] h-fit p-3 flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] bg-white">
-              {data?.slice(3, 8).map((value: any) => {
-                return (
-                  <Searchmovie
-                    key={value.original_title}
-                    src={`https://image.tmdb.org/t/p/original${value.poster_path}`}
-                    title={value.debouncedInputvalue}
-                    rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
-                    date={value.release_date?.slice(0, 4)}
-                  />
-                );
-              })}
-              <div className="flex h-10 py-2 px-4 justify-center items-center gap-2 rounded-md bg-white">
-                <p className="text-[14px] font-medium">
-                  See all results for {data[0]?.original_title}
-                </p>
-              </div>
-            </PopoverContent>
-          </Popover>
+          className={`flex w-[577px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[34vw] top-[5vh] z-30 ${
+            mode ? "bg-white" : "bg-black"
+          } ${inputvalue !== "" ? "flex" : "hidden"}`}>
+          {data?.slice(0, 5).map((value) => {
+            return (
+              <Searchmovie
+                onclick={() => {
+                  handletodetail(value.id);
+                }}
+                mode={mode}
+                key={value}
+                title={value.title}
+                src={`https://image.tmdb.org/t/p/original${value.poster_path}`}
+                rate={(Math.round(value.vote_average * 10) / 10).toFixed(1)}
+                date={value.release_date}
+              />
+            );
+          })}
+          <button
+            onClick={() => {
+              handletosearchresults(debouncedInputvalue);
+            }}
+            className={`${
+              data.length == 0 ? "hidden" : "flex"
+            } w-full h-10 px-4 py-2 justify-start items-center gap-2 rounded-md`}>
+            <p className="text-[14px] font-medium">
+              See all results for "{debouncedInputvalue}"
+            </p>
+          </button>
+          <div
+            className={`${
+              data.length == 0 ? "flex" : "hidden"
+            } w-[577px] h-[95px] pt-6 pb-4 px-5 rounded-lg `}>
+            <div className="flex w-full h-full justify-center items-center">
+              <p className="text-[14px] font-medium">No results found.</p>
+            </div>
+          </div>
         </div>
       </div>
       <button

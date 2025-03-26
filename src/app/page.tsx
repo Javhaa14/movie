@@ -14,6 +14,7 @@ import { List } from "@/components/ui/list";
 import { Nowplaying } from "@/components/ui/nowplaying";
 import { useMode } from "./modecontext";
 import { Pageskel } from "@/components/ui/pageskel";
+import { Task } from "@/components/ui/task";
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
@@ -47,10 +48,41 @@ export default function Home() {
     router.push(`/detail/${id}`);
   };
 
-  const handle = (id: string) => {
+  const handletomore = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
+  // Counter
+  // Show input text
+  // const [button, setButton] = useState(0);
+  // const [input, setInput] = useState("");
+  // const [toggle, setToggle] = useState(false);
+  // const [character, setCharacter] = useState(0);
 
+  // const handler = () => {
+  //   setButton(button + 1);
+  // };
+  // const inputhandle = (event: any) => {
+  //   setInput(event.target.value);
+  //   setInputvalue(event.target.value);
+  // };
+  // const toggler = () => {
+  //   setToggle(!toggle);
+  // };
+  // const charcounter = (input: string) => {
+  //   setCharacter(input.length);
+  // };
+  // const arr: any[] = [];
+  // const [task, setTask] = useState(arr);
+  // const [inputvalue, setInputvalue] = useState("");
+  // const buttonhandler = () => {
+  //   setButton(button + 1);
+  //   setTask([...task, { task: inputvalue, id: button }]);
+  //   setInputvalue("");
+  // };
+  // const del = (id: number) => {
+  //   setTask(task.filter((value) => value.id !== id));
+  // };
+  // console.log(task);
   return (
     <Suspense fallback={<Pageskel />}>
       <div
@@ -90,7 +122,7 @@ export default function Home() {
         {sectiondata.map((value) => {
           return (
             <List
-              seemore={handle}
+              seemore={handletomore}
               className={`${
                 mode ? "bg-white text-[#09090B]" : "bg-black text-white"
               }`}
@@ -103,4 +135,51 @@ export default function Home() {
       </div>
     </Suspense>
   );
+}
+// <div className="w-screen h-screen flex flex-col justify-center items-center gap-4">
+//   <div className="flex gap-4">
+//     <input
+//       value={inputvalue}
+//       onChange={inputhandle}
+//       className="w-[300px] h-[20px] bg-yellow-100"></input>
+//     <button onClick={buttonhandler}>Add ToDo</button>
+//   </div>
+//   <div className="w-full h-fit flex items-center flex-col">
+//     {task.map((value) => {
+//       return (
+//         <Task
+//           key={value.id}
+//           task={value.task}
+//           onclick={() => {
+//             del(value.id);
+//           }}
+//         />
+//       );
+//     })}
+//   </div>
+// </div>
+{
+  /* <button className="size-[50px] bg-black text-white" onClick={handler}>
+        Click
+      </button>
+      <p className="text-black">{button}</p>
+      <input
+        onChange={inputhandle}
+        className="w-[300px] h-[20px] bg-yellow-100"></input>
+      <p>{input}</p>
+      <button
+        className={`size-[50px] ${
+          toggle ? "bg-black text-red-700" : "bg-white text-black"
+        } `}
+        onClick={toggler}>
+        hey
+      </button>
+      <button
+        className={`size-[50px] `}
+        onClick={() => {
+          charcounter(input);
+        }}>
+        tooloh
+      </button>
+      <p>{character}</p> */
 }

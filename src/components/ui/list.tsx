@@ -43,7 +43,7 @@ export const List = ({ type, name, className, seemore }: any) => {
         {data?.slice(0, 10).map((value: any) => {
           return (
             <Movie
-              className={`w-[190px] h-[373px] ${
+              className={`w-[230px] h-[439px] ${
                 mode
                   ? "text-[#09090B] bg-[#F4F4F5]"
                   : "text-[#FFF] bg-[#222222]"

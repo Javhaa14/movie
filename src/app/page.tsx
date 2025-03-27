@@ -18,7 +18,7 @@ import { Task } from "@/components/ui/task";
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState(undefined);
 
   useEffect(() => {
     axios
@@ -83,6 +83,9 @@ export default function Home() {
   //   setTask(task.filter((value) => value.id !== id));
   // };
   // console.log(task);
+  if (!data || !sectiondata) {
+    return <Pageskel />;
+  }
   return (
     <Suspense fallback={<Pageskel />}>
       <div
@@ -119,7 +122,7 @@ export default function Home() {
             <CarouselNext className="mr-[100px] mt-[50px]" />
           </Carousel>
         </section>
-        {sectiondata.map((value) => {
+        {sectiondata?.map((value) => {
           return (
             <List
               seemore={handletomore}

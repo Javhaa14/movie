@@ -81,7 +81,10 @@ export const Navigation = () => {
     router.push(`/detail/${id}`);
     setInputvalue("");
   };
-
+  const handletomore = (id: string) => {
+    router.push(`/morelikethis/${id}`);
+    setInputvalue("");
+  };
   return (
     <div
       className={`flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center ${
@@ -157,6 +160,9 @@ export const Navigation = () => {
               <Searchmovie
                 onclick={() => {
                   handletodetail(value.id);
+                }}
+                seemore={() => {
+                  handletomore(value.id);
                 }}
                 mode={mode}
                 key={value}

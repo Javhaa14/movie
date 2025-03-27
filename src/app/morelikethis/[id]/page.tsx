@@ -150,7 +150,6 @@ export default function Morelike({
             <PaginationItem>
               <PaginationPrevious onClick={hasagch} />
             </PaginationItem>
-
             {pagcount > 1 && pagcount > 2 && (
               <PaginationItem>
                 <PaginationLink onClick={() => shiljigch(1)} href="#">

@@ -2,8 +2,8 @@
 import axios from "axios";
 import { useEffect, useState, useRef, ChangeEvent, use } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
-
 import { useRouter } from "next/navigation";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,6 +14,7 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
+import { Autocomplete } from "@/components/autocomplete";
 import { Input } from "@/components/ui/input";
 import { WiNightClear } from "react-icons/wi";
 import { MdSunny } from "react-icons/md";
@@ -32,7 +33,7 @@ export const Navigation = () => {
 
   const [data, setData] = useState([{}]);
   const [inputvalue, setInputvalue] = useState("");
-  const debouncedInputvalue = useDebounce(inputvalue, 500);
+  const debouncedInputvalue = useDebounce(inputvalue, 200);
   const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputvalue(event.target.value);
   };
@@ -85,6 +86,15 @@ export const Navigation = () => {
     router.push(`/morelikethis/${id}`);
     setInputvalue("");
   };
+  type OptionType = {
+    value: string;
+    label: string;
+  };
+
+  interface AutocompleteProps {
+    options: OptionType[];
+  }
+
   return (
     <div
       className={`flex w-[100%] h-[59px] py-6 px-[80px] justify-between items-center ${
@@ -123,28 +133,21 @@ export const Navigation = () => {
               <NavigationMenuContent
                 className={`${
                   mode ? "bg-white text-black" : "bg-black text-white"
+                } flex w-[577px] p-5 flex-col items-start gap-0 rounded-[8px]${
+                  mode ? "bg-white text-[#09090B]" : "bg-black text-white"
                 }`}>
-                <NavigationMenuLink
-                  className={`flex w-[577px] p-5 flex-col items-start gap-0 rounded-[8px]${
-                    mode ? "bg-white text-[#09090B]" : "bg-black text-white"
-                  }`}>
-                  <div className="flex w-[213px] flex-col items-start gap-1">
-                    <p className="self-stretch text-6 font-semibold">Genres</p>
-                    <p className="self-stretch text-4 font-normal">
-                      See lists of movies by genre
-                    </p>
-                  </div>
-                  <div className="flex w-[550px] py-4 flex-col items-start gap-[10px] self-stretch">
-                    <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
-                  </div>
-                  <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
-                    {genre?.map((value: any) => {
-                      return <Genres key={value.name} genre={value.name} />;
-                    })}
-                  </div>
-                  {/* <button className="flex h-10 py-2 px-4 justify-center items-center gap-2 self-stretch rounded-[6px] bg-white"></button> */}
-                </NavigationMenuLink>
-                <NavigationMenuLink></NavigationMenuLink>
+                <div className="flex w-[213px] flex-col items-start gap-1">
+                  <p className="self-stretch text-6 font-semibold">Genres</p>
+                  <p className="self-stretch text-4 font-normal">
+                    See lists of movies by genre
+                  </p>
+                </div>
+                <div className="flex w-[550px] py-4 flex-col items-start gap-[10px] self-stretch">
+                  <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+                </div>
+                <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
+                  <Autocomplete options={genre} mode={mode} />
+                </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>

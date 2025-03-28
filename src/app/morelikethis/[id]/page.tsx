@@ -152,7 +152,7 @@ export default function Morelike({
             </PaginationItem>
             {pagcount > 1 && pagcount > 2 && (
               <PaginationItem>
-                <PaginationLink onClick={() => shiljigch(1)} href="#">
+                <PaginationLink onClick={() => shiljigch(1)}>
                   {1}
                 </PaginationLink>
               </PaginationItem>
@@ -164,14 +164,11 @@ export default function Morelike({
             )}
             {pagcount > 1 && (
               <PaginationItem>
-                <PaginationLink
-                  onClick={() => shiljigch(pagcount - 1)}
-                  href="#">
+                <PaginationLink onClick={() => shiljigch(pagcount - 1)}>
                   {pagcount - 1}
                 </PaginationLink>
               </PaginationItem>
             )}
-
             <PaginationItem>
               <PaginationLink
                 className={`${
@@ -183,15 +180,14 @@ export default function Morelike({
                     ? "bg-blue-500 text-white"
                     : "bg-white text-black"
                 } px-4 py-2 rounded-lg transition-colors duration-300`}
-                onClick={() => shiljigch(pagcount)}
-                href="#">
+                onClick={() => shiljigch(pagcount)}>
                 {pagcount}
               </PaginationLink>
             </PaginationItem>
 
             {pagcount < totalpages && (
               <PaginationItem>
-                <PaginationLink onClick={nemegch} href="#">
+                <PaginationLink onClick={nemegch}>
                   {pagcount + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -205,7 +201,7 @@ export default function Morelike({
 
             {pagcount < totalpages && pagcount < totalpages - 1 && (
               <PaginationItem>
-                <PaginationLink onClick={() => shiljigch(totalpages)} href="#">
+                <PaginationLink onClick={() => shiljigch(totalpages)}>
                   {totalpages}
                 </PaginationLink>
               </PaginationItem>

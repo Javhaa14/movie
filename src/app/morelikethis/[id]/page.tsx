@@ -17,9 +17,9 @@ import { useMode } from "@/app/modecontext";
 import { axiosInstance } from "@/lib/utils";
 type data = {
   adult: Boolean;
-  title: String;
-  release_date: String;
-  runtime: String;
+  title: string;
+  release_date: string;
+  runtime: string;
   vote_average: number;
   id: any;
   poster_path?: string;
@@ -97,7 +97,7 @@ export default function Morelike({
         </div>
 
         <div className="w-full h-full grid grid-cols-5 gap-8">
-          {datasimiliar?.map((movie: Data, index: number) => (
+          {datasimiliar?.map((movie: data, index: number) => (
             <Movie
               key={index}
               onclick={() => handleonclick(movie.id)}
@@ -110,7 +110,7 @@ export default function Morelike({
         </div>
 
         <div className="w-full h-full grid grid-cols-5 gap-8">
-          {data?.map((movie: Data, index: number) => (
+          {data?.map((movie: data, index: number) => (
             <Movie
               key={index}
               onclick={() => handleonclick(movie.id)}

@@ -1,4 +1,4 @@
-export const MovieSkeleton = ({ className }) => {
+export const MovieSkeleton = ({ className }:any) => {
   return (
     <div
       className={`flex flex-col justify-center items-center rounded-lg ${className}`}>

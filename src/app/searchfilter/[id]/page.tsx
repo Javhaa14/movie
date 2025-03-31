@@ -13,26 +13,57 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
+import { log } from "node:console";
 
 export default function Searchfilter({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  const [genre, setGenre] = useState([]);
+  
+  type OptionType = {
+    id: number;
+    name: string;
+  };
+
+  type MovieType = {
+    id: string;
+    title: string;
+    poster_path: string;
+    vote_average: number;
+    genre_ids: number[];
+  };
+
+  const [genre, setGenre] = useState<OptionType[]>([]);
   const { mode, toggleMode } = useMode();
-  const [genredata, setGenredata] = useState();
+  const [genredata, setGenredata] = useState<MovieType[]>([]); 
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
+  console.log(selectedOptions,"gulg");
+  
+  const router = useRouter();
+
   useEffect(() => {
     axiosInstance
       .get(`genre/movie/list?language=en`)
       .then((res) => setGenre(res.data.genres));
   }, []);
+
   useEffect(() => {
-    axiosInstance
-      .get(`discover/movie?language=en&with_genres=28&page=1`)
-      .then((res) => setGenredata(res.data.results));
-  }, [genre]);
+    if (id) {
+      axiosInstance
+        .get(`discover/movie?language=en&with_genres=${id}&page=2`)
+        .then((res) => setGenredata(res.data.results));
+    }
+  }, [id]);
+  useEffect(() => {
+    if (genre.length > 0 && id) {
+      const genreName = genre.find((g) => g.id.toString() === id)?.name;
+      if (genreName) {
+        setSelectedOptions([{ id: Number(id), name: genreName }]);
+      }
+    }
+  }, [genre, id]);
+console.log(genredata,"data");
 
   const handleSelect = (option: OptionType) => {
     setSelectedOptions((prev) => {
@@ -44,40 +75,17 @@ export default function Searchfilter({
       }
     });
   };
-  console.log(genredata, "pas");
-  const router = useRouter();
 
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
   };
-
-  // const [slice, setSlice] = useState(0);
-  // const [slice2, setSlice2] = useState(8);
-  // const page = [
-  //   { slice1: 0, slice2: 8 },
-  //   { slice1: 8, slice2: 16 },
-  //   { slice1: 16, slice2: 24 },
-  // ];
-  // const nemegch = () => {
-  //   if (slice !== 16 && slice2 !== 24) {
-  //     setSlice(slice + 8);
-  //     setSlice2(slice2 + 8);
-  //   }
-  // };
-  // const hasagch = () => {
-  //   if (slice !== 0 && slice2 !== 8) {
-  //     setSlice(slice - 8);
-  //     setSlice2(slice2 - 8);
-  //   }
-  // };
-
-  // const shiljigch = (huudas: number) => {
-  //   if (huudas >= 0 && huudas <= 2) {
-  //     setSlice(page[huudas].slice1);
-  //     setSlice2(page[huudas].slice2);
-  //   }
-  // };
-
+  const idtoname=(too:any)=>{
+    for (let z = 0; z < genre.length; z++) {
+      if (too==genre[z].id) {
+    return genre[z].name
+      }    
+    }
+  }
   const genrefilter =
     selectedOptions.length > 0
       ? genredata?.filter((item) => {
@@ -87,10 +95,6 @@ export default function Searchfilter({
           return test.length === selectedOptions.length;
         })
       : genredata;
-
-  console.log(genrefilter, "ho");
-  console.log(selectedOptions, "selected");
-  console.log(genre, "genre");
 
   return (
     <div
@@ -118,9 +122,11 @@ export default function Searchfilter({
           <div className="flex flex-col h-[804px] justify-between">
             <div className="flex w-[804px] flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
-                <p className="text-[20px] font-semibold">
-                  {genrefilter.length} titles in {genre[0].name}
-                </p>
+                <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">{genrefilter.length} titles in {selectedOptions.length==0?"":selectedOptions.map((value)=>{
+return  <p className="text-[20px] font-semibold">{value.name},</p>
+                  })}</div>
+                  
+               
               </div>
               <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
                 {genrefilter?.slice(0, 12).map((value) => {
@@ -134,7 +140,7 @@ export default function Searchfilter({
                       onclick={() => {
                         handletodetail(value.id);
                       }}
-                      key={value}
+                      key={value.id} 
                       name={value.title}
                       image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
                       rating={(
@@ -147,54 +153,7 @@ export default function Searchfilter({
             </div>
 
             <div className="flex w-full flex-col items-end gap-[10px] self-stretch mt-8 pb-">
-              {/* <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious onClick={hasagch} />
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationLink
-                      className={`${
-                        mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(0)}
-                      href="#">
-                      {1}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className={`${
-                        mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(1)}
-                      href="#">
-                      {2}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className={`${
-                        mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(2)}
-                      href="#">
-                      {3}
-                    </PaginationLink>
-                  </PaginationItem>
-
-                  <PaginationItem>
-                    <PaginationNext onClick={nemegch} />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination> */}
+              {/* Pagination logic can be added here */}
             </div>
           </div>
         </div>

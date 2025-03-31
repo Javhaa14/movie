@@ -1,10 +1,11 @@
 "use client";
-import { ModuleSource } from "module";
-import { useState, useEffect } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
-import axios from "axios";
-import { useRouter } from "next/router";
+
+type OptionType = {
+  id: number;
+  name: string;
+};
 interface AutocompleteProps {
   options: OptionType[];
   selectedOptions: OptionType[];

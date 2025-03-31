@@ -1,6 +1,6 @@
-"use client";
+"use client"
 import { Suspense, useEffect, useState } from "react";
-import axios from "axios";
+
 import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -14,12 +14,22 @@ import { List } from "@/components/ui/list";
 import { Nowplaying } from "@/components/ui/nowplaying";
 import { useMode } from "./modecontext";
 import { Pageskel } from "@/components/ui/pageskel";
-import { Task } from "@/components/ui/task";
 import { axiosInstance } from "@/lib/utils";
+
+// Define the type for a movie item
+interface Movie {
+  id: string;
+  backdrop_path: string;
+  original_title: string;
+  vote_average: number;
+  overview: string;
+}
+
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
-  const [data, setData] = useState(undefined);
+  // Initialize the state with the correct type for movie data
+  const [data, setData] = useState<Movie[] | undefined>(undefined);
 
   useEffect(() => {
     axiosInstance
@@ -44,41 +54,12 @@ export default function Home() {
   const handletomore = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
-  // Counter
-  // Show input text
-  // const [button, setButton] = useState(0);
-  // const [input, setInput] = useState("");
-  // const [toggle, setToggle] = useState(false);
-  // const [character, setCharacter] = useState(0);
 
-  // const handler = () => {
-  //   setButton(button + 1);
-  // };
-  // const inputhandle = (event: any) => {
-  //   setInput(event.target.value);
-  //   setInputvalue(event.target.value);
-  // };
-  // const toggler = () => {
-  //   setToggle(!toggle);
-  // };
-  // const charcounter = (input: string) => {
-  //   setCharacter(input.length);
-  // };
-  // const arr: any[] = [];
-  // const [task, setTask] = useState(arr);
-  // const [inputvalue, setInputvalue] = useState("");
-  // const buttonhandler = () => {
-  //   setButton(button + 1);
-  //   setTask([...task, { task: inputvalue, id: button }]);
-  //   setInputvalue("");
-  // };
-  // const del = (id: number) => {
-  //   setTask(task.filter((value) => value.id !== id));
-  // };
-  // console.log(task);
+  // Show a loading skeleton if data is not available yet
   if (!data || !sectiondata) {
     return <Pageskel />;
   }
+
   return (
     <Suspense fallback={<Pageskel />}>
       <div
@@ -92,9 +73,9 @@ export default function Home() {
                 delay: 5000,
               }),
             ]}
-            className="w-full h-[600px] ">
+            className="w-full h-[600px]">
             <CarouselContent>
-              {data?.slice(0, 5).map((value: any, index: any) => {
+              {data?.slice(0, 5).map((value: Movie, index: number) => {
                 return (
                   <Nowplaying
                     data={data}
@@ -131,51 +112,4 @@ export default function Home() {
       </div>
     </Suspense>
   );
-}
-// <div className="w-screen h-screen flex flex-col justify-center items-center gap-4">
-//   <div className="flex gap-4">
-//     <input
-//       value={inputvalue}
-//       onChange={inputhandle}
-//       className="w-[300px] h-[20px] bg-yellow-100"></input>
-//     <button onClick={buttonhandler}>Add ToDo</button>
-//   </div>
-//   <div className="w-full h-fit flex items-center flex-col">
-//     {task.map((value) => {
-//       return (
-//         <Task
-//           key={value.id}
-//           task={value.task}
-//           onclick={() => {
-//             del(value.id);
-//           }}
-//         />
-//       );
-//     })}
-//   </div>
-// </div>
-{
-  /* <button className="size-[50px] bg-black text-white" onClick={handler}>
-        Click
-      </button>
-      <p className="text-black">{button}</p>
-      <input
-        onChange={inputhandle}
-        className="w-[300px] h-[20px] bg-yellow-100"></input>
-      <p>{input}</p>
-      <button
-        className={`size-[50px] ${
-          toggle ? "bg-black text-red-700" : "bg-white text-black"
-        } `}
-        onClick={toggler}>
-        hey
-      </button>
-      <button
-        className={`size-[50px] `}
-        onClick={() => {
-          charcounter(input);
-        }}>
-        tooloh
-      </button>
-      <p>{character}</p> */
 }

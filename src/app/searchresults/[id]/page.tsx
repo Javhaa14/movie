@@ -18,16 +18,35 @@ export default function Searchresults({
 }: {
   params: { id: string };
 }) {
-  const [data, setData] = useState([{}]);
+  type MovieData = {
+    id: string;
+    title: string;
+    poster_path: string;
+    vote_average: number;
+    genre_ids: number[];
+  };
+  type Genre = {
+    id: number;
+    name: string;
+  };
+  type OptionType = {
+    id: number;
+    name: string;
+  };
+  
+  const [data, setData] = useState<MovieData[]>([]);
   const params = useParams();
   const { mode, toggleMode } = useMode();
 
   useEffect(() => {
-    axiosInstance
-      .get(`search/movie?query=${id}&language=en-US&page=1`)
-      .then((res) => setData(res.data.results));
-  }, []);
-  const [genre, setGenre] = useState([]);
+    if (id) {
+      axiosInstance
+        .get(`search/movie?query=${id}&language=en-US&page=1`)
+        .then((res) => setData(res.data.results));
+    }
+  }, [id]);
+  
+  const [genre, setGenre] = useState<Genre[]>([]);
 
   useEffect(() => {
     axiosInstance
@@ -47,12 +66,20 @@ export default function Searchresults({
     { slice1: 8, slice2: 16 },
     { slice1: 16, slice2: 24 },
   ];
+  const shiljigch = (huudas: number) => {
+    if (huudas >= 0 && huudas <= 2) {
+      setSlice(page[huudas].slice1);
+      setSlice2(page[huudas].slice2);
+    }
+  };
+  
   const nemegch = () => {
     if (slice !== 16 && slice2 !== 24) {
       setSlice(slice + 8);
       setSlice2(slice2 + 8);
     }
   };
+  
   const hasagch = () => {
     if (slice !== 0 && slice2 !== 8) {
       setSlice(slice - 8);
@@ -60,12 +87,7 @@ export default function Searchresults({
     }
   };
 
-  const shiljigch = (huudas: number) => {
-    if (huudas >= 0 && huudas <= 2) {
-      setSlice(page[huudas].slice1);
-      setSlice2(page[huudas].slice2);
-    }
-  };
+  
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
   const handleSelect = (option: OptionType) => {
     setSelectedOptions((prev) => {
@@ -86,13 +108,7 @@ export default function Searchresults({
           return test.length === selectedOptions.length;
         })
       : data;
-  const [genredata, setGenredata] = useState();
-  useEffect(() => {
-    axiosInstance
-      .get(`discover/movie?language=en&with_genres=28&page=1`)
-      .then((res) => setGenredata(res.data.results));
-  }, [id]);
-  console.log(genredata, "pas");
+  
   console.log(genrefilter, "ho");
   console.log(selectedOptions, "selected");
   console.log(data, "data");
@@ -125,7 +141,7 @@ export default function Searchresults({
                       onclick={() => {
                         handletodetail(value.id);
                       }}
-                      key={value}
+                      key={value.id}
                       name={value.title}
                       image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
                       rating={(

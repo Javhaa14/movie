@@ -7,16 +7,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import axios from "axios";
 import { CiPlay1 } from "react-icons/ci";
+
 interface propsType {
   title: string;
   rate: string;
   description: string;
   src: string;
   onclick: () => void;
-  data: object;
+  data: Array<any>; 
 }
+
 export const Nowplaying = ({
   title,
   rate,
@@ -54,9 +55,10 @@ export const Nowplaying = ({
         </button>
       </div>
       <div className="inline-flex w-full items-center gap-2 absolute top-140 justify-center">
-        {data?.slice(0, 5).map(() => {
+        {data?.slice(0, 5).map((_, index) => { 
           return (
             <a
+              key={index} 
               className="size-3 rounded-[50%] bg-[#808080] hover:bg-white"
               href="#slde-1"></a>
           );

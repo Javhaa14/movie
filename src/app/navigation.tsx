@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { useEffect, useState, useRef, ChangeEvent, use } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
@@ -14,18 +13,33 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import { Autocomplete } from "@/components/autocomplete";
 import { Input } from "@/components/ui/input";
 import { MdSunny } from "react-icons/md";
 import { Searchmovie } from "@/components/ui/searchmovie";
 import { useMode } from "./modecontext";
 import { axiosInstance } from "@/lib/utils";
-
+import { Autocomplete } from "@/components/autocomplete";
 export const Navigation = () => {
   const { mode, toggleMode } = useMode();
-
-  const [data, setData] = useState([{}]);
-  const [inputvalue, setInputvalue] = useState("");
+  type MovieData = {
+    id: string;
+    title: string;
+    poster_path: string;
+    vote_average: number;
+    release_date: string;
+  };
+  type Genre = {
+    id: number;
+    name: string;
+  };
+  type OptionType = {
+    id: number;
+    name: string;
+  };
+  const [genre, setGenre] = useState<Genre[]>([]);
+  const [data, setData] = useState<MovieData[]>([]);
+    const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
+    const [inputvalue, setInputvalue] = useState("");
   const debouncedInputvalue = useDebounce(inputvalue, 200);
   const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputvalue(event.target.value);
@@ -38,8 +52,6 @@ export const Navigation = () => {
       .then((res) => setData(res.data.results));
   }, [debouncedInputvalue]);
   console.log(data, "hi");
-
-  const [genre, setGenre] = useState([]);
 
   useEffect(() => {
     axiosInstance
@@ -60,19 +72,17 @@ export const Navigation = () => {
     router.push(`/morelikethis/${id}`);
     setInputvalue("");
   };
-  type OptionType = {
-    value: string;
-    label: string;
-  };
-
-  interface AutocompleteProps {
-    options: OptionType[];
-  }
-
   const handletosearchfilter = (id: string) => {
     router.push(`/searchfilter/${id}`);
     setInputvalue("");
   };
+  
+  const handleSelect = (option: OptionType) => {
+    console.log("Selected Option ID:", option.id);  
+    handletosearchfilter(option.id.toString()); }
+  
+  
+  
 
   return (
     <div
@@ -125,17 +135,12 @@ export const Navigation = () => {
                   <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
                 </div>
                 <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
-                  {genre?.map((value: any) => {
-                    return (
-                      <Genres
-                        key={value.name}
-                        genre={value.name}
-                        onClick={() => {
-                          handletosearchfilter(value.id);
-                        }}
-                      />
-                    );
-                  })}
+                 <Autocomplete
+                                 options={genre}
+                                 mode={mode}
+                                 selectedOptions={selectedOptions}
+                                 onSelect={handleSelect}
+                               />
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

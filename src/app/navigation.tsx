@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState, useRef, ChangeEvent, use } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
-
+import { Genres } from "@/components/ui/genres";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,20 +16,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Autocomplete } from "@/components/autocomplete";
 import { Input } from "@/components/ui/input";
-import { WiNightClear } from "react-icons/wi";
 import { MdSunny } from "react-icons/md";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Searchmovie } from "@/components/ui/searchmovie";
-import { Genres } from "@/components/ui/genres";
 import { useMode } from "./modecontext";
+import { axiosInstance } from "@/lib/utils";
 
 export const Navigation = () => {
   const { mode, toggleMode } = useMode();
-  const inputref = useRef("");
 
   const [data, setData] = useState([{}]);
   const [inputvalue, setInputvalue] = useState("");
@@ -40,18 +33,8 @@ export const Navigation = () => {
   console.log("rerendering", debouncedInputvalue);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${debouncedInputvalue}&language=en-US&page=1`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
+    axiosInstance
+      .get(`search/movie?query=${debouncedInputvalue}&language=en-US&page=1`)
       .then((res) => setData(res.data.results));
   }, [debouncedInputvalue]);
   console.log(data, "hi");
@@ -59,15 +42,8 @@ export const Navigation = () => {
   const [genre, setGenre] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`https://api.themoviedb.org/3/genre/movie/list?language=en`, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-        },
-      })
+    axiosInstance
+      .get(`genre/movie/list?language=en`)
       .then((res) => setGenre(res.data.genres));
   }, []);
   const router = useRouter();
@@ -75,9 +51,7 @@ export const Navigation = () => {
     router.push(`/searchresults/${id}`);
     setInputvalue("");
   };
-  // const goback=(()=>{
-  //   router.push(``);
-  // })
+
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
     setInputvalue("");
@@ -94,6 +68,11 @@ export const Navigation = () => {
   interface AutocompleteProps {
     options: OptionType[];
   }
+
+  const handletosearchfilter = (id: string) => {
+    router.push(`/searchfilter/${id}`);
+    setInputvalue("");
+  };
 
   return (
     <div
@@ -146,14 +125,23 @@ export const Navigation = () => {
                   <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
                 </div>
                 <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
-                  <Autocomplete options={genre} mode={mode} />
+                  {genre?.map((value: any) => {
+                    return (
+                      <Genres
+                        key={value.name}
+                        genre={value.name}
+                        onClick={() => {
+                          handletosearchfilter(value.id);
+                        }}
+                      />
+                    );
+                  })}
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <Input mode={mode} change={handleonchange}></Input>
-
         <div
           className={`flex w-[577px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[34vw] top-[5vh] z-30 ${
             mode ? "bg-white" : "bg-black"

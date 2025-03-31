@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/pagination";
 import { useSearchParams } from "next/navigation";
 import { useMode } from "@/app/modecontext";
+import { axiosInstance } from "@/lib/utils";
 type data = {
   adult: Boolean;
   title: String;
@@ -41,18 +42,8 @@ export default function Morelike({
     router.push(`/detail/${id}`);
   };
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${params.id}/similar?language=en-US&page=${pagcount}`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
+    axiosInstance
+      .get(`movie/${params.id}/similar?language=en-US&page=${pagcount}`)
       .then((res) => setDatasimiliar(res.data.results));
   }, [pagcount]);
 
@@ -60,18 +51,8 @@ export default function Morelike({
 
   console.log(pagcount, "pagenumber");
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}?language=en-US&page=${pagcount}`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
+    axiosInstance
+      .get(`movie/${id}?language=en-US&page=${pagcount}`)
       .then((res) => setData(res.data.results));
   }, [pagcount]);
 

@@ -10,6 +10,7 @@ import { Movie } from "@/components/ui/movie";
 import { MdCancel } from "react-icons/md";
 import { useMode } from "@/app/modecontext";
 import { Detailskeleton } from "@/components/ui/detailskeleton";
+import { axiosInstance } from "@/lib/utils";
 
 export default function Detail({ params: { id } }: string) {
   const { mode, toggleMode } = useMode();
@@ -41,29 +42,14 @@ export default function Detail({ params: { id } }: string) {
   }
 
   useEffect(() => {
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${params.id}?language=en-US`, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-        },
-      })
+    axiosInstance
+      .get(`movie/${params.id}?language=en-US`)
       .then((res) => setData(res.data));
   }, []);
   useEffect(() => {
-    axios
+    axiosInstance
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/videos?&api_key=d67d8bebd0f4ff345f6505c99e9d0289language=en-US`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
+        `movie/${id}/videos?&api_key=d67d8bebd0f4ff345f6505c99e9d0289language=en-US`
       )
       .then((res) => setDatatrailers(res.data.results));
   }, []);
@@ -87,18 +73,8 @@ export default function Detail({ params: { id } }: string) {
   };
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
+    axiosInstance
+      .get(`movie/${id}/similar?language=en-US&page=1`)
       .then((res) => setDatasimiliar(res.data.results));
   }, []);
   const handle = (id: string) => {
@@ -107,15 +83,8 @@ export default function Detail({ params: { id } }: string) {
   console.log(data?.title);
 
   useEffect(() => {
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-        },
-      })
+    axiosInstance
+      .get(`movie/${id}?language=en-US`)
       .then((res) => setDatagenre(res.data.genres));
   }, []);
 
@@ -199,7 +168,6 @@ export default function Detail({ params: { id } }: string) {
             className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
               button ? "flex" : "hidden"
             } `}></iframe>
-          {/* ${button ? "brightness-200" : "brigthness-100"} */}
           <button
             onClick={handlebutton}
             className="flex mt-[7%] ml-[83%] mb-[90%] absolute w-fit h-fit justify-center items-center rounded-full bg-white">

@@ -15,23 +15,16 @@ import { Nowplaying } from "@/components/ui/nowplaying";
 import { useMode } from "./modecontext";
 import { Pageskel } from "@/components/ui/pageskel";
 import { Task } from "@/components/ui/task";
+import { axiosInstance } from "@/lib/utils";
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
   const [data, setData] = useState(undefined);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(
-        `https://api.themoviedb.org/3/movie/now_playing?&api_key=d67d8bebd0f4ff345f6505c99e9d0289&language=en-US&page=1`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
+        `movie/now_playing?&api_key=d67d8bebd0f4ff345f6505c99e9d0289&language=en-US&page=1`
       )
       .then((res) => setData(res.data.results));
   }, []);

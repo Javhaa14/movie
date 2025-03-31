@@ -1,21 +1,18 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Genres } from "@/components/ui/genres";
-import { Searchmovie } from "@/components/ui/searchmovie";
-import { useSearchParams } from "next/navigation";
 import { Movie } from "@/components/ui/movie";
+import { Autocomplete } from "@/components/autocomplete";
 import { useMode } from "@/app/modecontext";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { axiosInstance } from "@/lib/utils";
 export default function Searchresults({
   params: { id },
 }: {
@@ -24,37 +21,17 @@ export default function Searchresults({
   const [data, setData] = useState([{}]);
   const params = useParams();
   const { mode, toggleMode } = useMode();
-  // const params = useSearchParams()
-  // const params.get('searchValue')
+
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${id}&language=en-US&page=1`,
-        {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-          },
-        }
-      )
+    axiosInstance
+      .get(`search/movie?query=${id}&language=en-US&page=1`)
       .then((res) => setData(res.data.results));
   }, []);
   const [genre, setGenre] = useState([]);
 
-  // console.log(whitespace());
-
   useEffect(() => {
-    axios
-      .get(`https://api.themoviedb.org/3/genre/movie/list?language=en`, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzk2OTBmOTgzMGNlODA0Yjc4OTRhYzFkZWY0ZjdlOSIsIm5iZiI6MTczNDk0OTM3MS43NDIsInN1YiI6IjY3NjkzOWZiYzdmMTcyMDVkMTBiMGIxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2r2TerxSJdZGmGVSLVDkk6nHT0NPqY4rOcxHtMNt0aE",
-        },
-      })
+    axiosInstance
+      .get(`genre/movie/list?language=en`)
       .then((res) => setGenre(res.data.genres));
   }, []);
   const router = useRouter();
@@ -89,6 +66,36 @@ export default function Searchresults({
       setSlice2(page[huudas].slice2);
     }
   };
+  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
+  const handleSelect = (option: OptionType) => {
+    setSelectedOptions((prev) => {
+      const isSelected = prev.some((item) => item.name === option.name);
+      if (isSelected) {
+        return prev.filter((item) => item.name !== option.name);
+      } else {
+        return [...prev, option];
+      }
+    });
+  };
+  const genrefilter =
+    selectedOptions.length > 0
+      ? data.filter((item) => {
+          const test = selectedOptions.filter((option) => {
+            return item.genre_ids?.includes(option.id);
+          });
+          return test.length === selectedOptions.length;
+        })
+      : data;
+  const [genredata, setGenredata] = useState();
+  useEffect(() => {
+    axiosInstance
+      .get(`discover/movie?language=en&with_genres=28&page=1`)
+      .then((res) => setGenredata(res.data.results));
+  }, [id]);
+  console.log(genredata, "pas");
+  console.log(genrefilter, "ho");
+  console.log(selectedOptions, "selected");
+  console.log(data, "data");
   return (
     <div
       className={`flex flex-col gap-[74px] w-fit h-[1290px] ${
@@ -103,11 +110,11 @@ export default function Searchresults({
             <div className="flex w-[804px] flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <p className="text-[20px] font-semibold">
-                  {data.length} results for "{id.replaceAll("%20", " ")}"
+                  {genrefilter.length} results for "{id.replaceAll("%20", " ")}"
                 </p>
               </div>
               <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
-                {data.slice(slice, slice2).map((value) => {
+                {genrefilter.slice(slice, slice2).map((value) => {
                   return (
                     <Movie
                       className={`w-[165px] h-[331px] ${
@@ -188,9 +195,12 @@ export default function Searchresults({
               <p className="text-[16px]">See lists of movies by genre</p>
             </div>
             <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
-              {genre?.map((value: any) => {
-                return <Genres key={value.name} genre={value.name} />;
-              })}
+              <Autocomplete
+                options={genre}
+                mode={mode}
+                selectedOptions={selectedOptions}
+                onSelect={handleSelect}
+              />
             </div>
           </div>
         </div>

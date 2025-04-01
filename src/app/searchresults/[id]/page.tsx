@@ -9,10 +9,13 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
+  PaginationEllipsis,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+
 export default function Searchresults({
   params: { id },
 }: {
@@ -33,15 +36,18 @@ export default function Searchresults({
     id: number;
     name: string;
   };
-
-  const [data, setData] = useState<MovieData[]>([]);
   const params = useParams();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const [pagcount, setPagcount] = useState<number>(Number(page) || 1);
+  const totalpages = 500;
+  const [data, setData] = useState<MovieData[]>([]);
   const { mode, toggleMode } = useMode();
 
   useEffect(() => {
     if (id) {
       axiosInstance
-        .get(`search/movie?query=${id}&language=en-US&page=1`)
+        .get(`search/movie?query=${id}&language=en-US&page=${pagcount}`)
         .then((res) => setData(res.data.results));
     }
   }, [id]);
@@ -57,33 +63,6 @@ export default function Searchresults({
 
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
-  };
-
-  const [slice, setSlice] = useState(0);
-  const [slice2, setSlice2] = useState(8);
-  const page = [
-    { slice1: 0, slice2: 10 },
-    { slice1: 10, slice2: 20 },
-  ];
-  const shiljigch = (huudas: number) => {
-    if (huudas >= 0 && huudas <= 2) {
-      setSlice(page[huudas].slice1);
-      setSlice2(page[huudas].slice2);
-    }
-  };
-
-  const nemegch = () => {
-    if (slice !== 10 && slice2 !== 20) {
-      setSlice(slice + 10);
-      setSlice2(slice2 + 10);
-    }
-  };
-
-  const hasagch = () => {
-    if (slice !== 0 && slice2 !== 10) {
-      setSlice(slice - 10);
-      setSlice2(slice2 - 10);
-    }
   };
 
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
@@ -119,18 +98,20 @@ export default function Searchresults({
         <p className="self-stretch text-[30px] font-semibold ">
           Search results
         </p>
-        <div className="flex w-full flex-row h-screen items-start gap-7">
+        <div className="flex w-full flex-row h-fit items-start gap-7">
           <div className="flex w-full flex-col h-fit justify-between">
-            <div className="flex w-full flex-col items-start gap-8">
+            <div className="flex w-full h-fit flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <p className="text-[20px] font-semibold">
                   {genrefilter.length} results for "{id.replaceAll("%20", " ")}"
                 </p>
               </div>
-              <div className="grid grid-cols-5 w-fit h-fit items-center gap-8 self-stretch">
-                {genrefilter.slice(0, 10).map((value) => {
+              <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
+                {genrefilter.slice(0, 20).map((value) => {
                   return (
                     <Movie
+                      na={`149px`}
+                      cla={`w-[165px] min-h-[244px] `}
                       className={`w-[165px] h-[331px] ${
                         mode
                           ? "text-[#09090B] bg-[#F4F4F5]"
@@ -155,49 +136,74 @@ export default function Searchresults({
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious onClick={hasagch} />
+                    <PaginationPrevious
+                      href={`?page=${pagcount > 1 ? pagcount - 1 : pagcount}`}
+                    />
                   </PaginationItem>
-
+                  {pagcount > 2 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${1}`}>{1}</PaginationLink>
+                    </PaginationItem>
+                  )}
+                  {pagcount > 3 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+                  {pagcount > 1 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${pagcount - 1}`}>
+                        {pagcount - 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
                   <PaginationItem>
                     <PaginationLink
+                      href={`?page=${pagcount}`}
                       className={`${
                         mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(0)}
-                      href="#">
-                      {1}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className={`${
-                        mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(1)}
-                      href="#">
-                      {2}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className={`${
-                        mode
-                          ? "bg-white focus:bg-black text-black focus:text-white"
-                          : "bg-black focus:bg-white text-white focus:text-black"
-                      }`}
-                      onClick={() => shiljigch(2)}
-                      href="#">
-                      {3}
+                          ? pagcount === 0
+                            ? "bg-blue-500 text-white"
+                            : "bg-black text-white"
+                          : pagcount === 0
+                          ? "bg-blue-500 text-white"
+                          : "bg-white text-black"
+                      } px-4 py-2 rounded-lg transition-colors duration-300`}>
+                      {pagcount}
                     </PaginationLink>
                   </PaginationItem>
 
-                  <PaginationItem>
-                    <PaginationNext onClick={nemegch} />
-                  </PaginationItem>
+                  {pagcount < totalpages && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${pagcount + 1}`}>
+                        {pagcount + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages - 1 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${totalpages}`}>
+                        {totalpages}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages && (
+                    <PaginationItem>
+                      <PaginationNext
+                        href={`?page=${
+                          pagcount < totalpages ? pagcount + 1 : pagcount
+                        }`}
+                      />
+                    </PaginationItem>
+                  )}
                 </PaginationContent>
               </Pagination>
             </div>

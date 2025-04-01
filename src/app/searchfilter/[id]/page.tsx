@@ -8,12 +8,13 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
+  PaginationEllipsis,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
-import { log } from "node:console";
+import { useSearchParams } from "next/navigation";
 
 export default function Searchfilter({
   params: { id },
@@ -32,6 +33,11 @@ export default function Searchfilter({
     vote_average: number;
     genre_ids: number[];
   };
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const [pagcount, setPagcount] = useState<number>(Number(page) || 1);
+  const totalpages = 500;
 
   const [genre, setGenre] = useState<OptionType[]>([]);
   const { mode, toggleMode } = useMode();
@@ -50,7 +56,7 @@ export default function Searchfilter({
   useEffect(() => {
     if (id) {
       axiosInstance
-        .get(`discover/movie?language=en&with_genres=${id}&page=2`)
+        .get(`discover/movie?language=en&with_genres=${id}&page=${pagcount}`)
         .then((res) => setGenredata(res.data.results));
     }
   }, [id]);
@@ -97,7 +103,7 @@ export default function Searchfilter({
 
   return (
     <div
-      className={`flex flex-col gap-[74px] w-fit h-[1290px] ${
+      className={`flex flex-col gap-[74px] w-fit h-fit ${
         mode ? "text-[#09090B] bg-white" : "text-[#FFF] bg-black"
       }`}>
       <div className="flex w-full h-fit px-[80px] flex-col items-start gap-8 self-stretch mt-[63.5px]">
@@ -117,9 +123,9 @@ export default function Searchfilter({
               />
             </div>
           </div>
-          <div className="h-[810px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
-          <div className="flex flex-col h-[804px] justify-between">
-            <div className="flex w-[804px] flex-col items-start gap-8">
+          <div className="h-fit self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+          <div className="flex flex-col h-fit justify-between">
+            <div className="flex w-[804px] h-fit flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">
                   {genrefilter.length} titles in{" "}
@@ -135,9 +141,11 @@ export default function Searchfilter({
                 </div>
               </div>
               <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
-                {genrefilter?.slice(0, 12).map((value) => {
+                {genrefilter?.slice(0, 20).map((value) => {
                   return (
                     <Movie
+                      na={`h-[149px]`}
+                      cla={`w-[165px] min-h-[244px] `}
                       className={`w-[165px] h-[331px] ${
                         mode
                           ? "text-[#09090B] bg-[#F4F4F5]"
@@ -158,8 +166,80 @@ export default function Searchfilter({
               </div>
             </div>
 
-            <div className="flex w-full flex-col items-end gap-[10px] self-stretch mt-8 pb-">
-              {/* Pagination logic can be added here */}
+            <div className="flex w-full flex-col items-end gap-[10px] self-stretch mt-8 mb-[76px]">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href={`?page=${pagcount > 1 ? pagcount - 1 : pagcount}`}
+                    />
+                  </PaginationItem>
+                  {pagcount > 2 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${1}`}>{1}</PaginationLink>
+                    </PaginationItem>
+                  )}
+                  {pagcount > 3 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+                  {pagcount > 1 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${pagcount - 1}`}>
+                        {pagcount - 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+                  <PaginationItem>
+                    <PaginationLink
+                      href={`?page=${pagcount}`}
+                      className={`${
+                        mode
+                          ? pagcount === 0
+                            ? "bg-blue-500 text-white"
+                            : "bg-black text-white"
+                          : pagcount === 0
+                          ? "bg-blue-500 text-white"
+                          : "bg-white text-black"
+                      } px-4 py-2 rounded-lg transition-colors duration-300`}>
+                      {pagcount}
+                    </PaginationLink>
+                  </PaginationItem>
+
+                  {pagcount < totalpages && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${pagcount + 1}`}>
+                        {pagcount + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages - 1 && (
+                    <PaginationItem>
+                      <PaginationLink href={`?page=${totalpages}`}>
+                        {totalpages}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {pagcount < totalpages && (
+                    <PaginationItem>
+                      <PaginationNext
+                        href={`?page=${
+                          pagcount < totalpages ? pagcount + 1 : pagcount
+                        }`}
+                      />
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
             </div>
           </div>
         </div>

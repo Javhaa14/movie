@@ -4,21 +4,25 @@ export const Movie = ({
   name,
   onclick,
   className,
+  cla,
+  na,
 }: {
   image: string;
   rating: string;
   name: string;
   className: string;
+  cla: string;
+  na: string;
   onclick: () => void;
 }) => {
   return (
     <div
       onClick={onclick}
       className={`flex flex-col items-start rounded-lg brightness-100 hover:brightness-90 ${className}`}>
-      <img className="w-[230px] h-[340px] rounded-t-lg" src={image}></img>
+      <img className={`rounded-t-lg ${cla}`} src={image}></img>
       <div
-        className={`flex p-2 flex-col items-start self-stretch h-[214px] overflow-scroll rounded-b-lg`}>
-        <div className="flex h-[23px] items-start gap-1 self-stretch">
+        className={`flex ${na} px-2 py-1 flex-col items-start self-stretch overflow-scroll rounded-b-lg`}>
+        <div className="flex h-[23px] pt-1 items-start gap-1 self-stretch">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="17"
@@ -48,7 +52,7 @@ export const Movie = ({
           <p className="text-[14px] ">{rating}</p>
           <p className="text-[#71717A] text-[12px]">/10</p>
         </div>
-        <div className="flex justify-center items-center gap-[10px] self-stretch">
+        <div className="flex items-center gap-[10px] self-stretch">
           <p className="overflow-hidden text-ellipsis text-[18px]">{name}</p>
         </div>
       </div>

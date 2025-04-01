@@ -51,7 +51,7 @@ export default function Detail() {
 
   function timeConvert(n: number | undefined): string {
     if (n === undefined) {
-      return "0h 0min"; // Return a default value when undefined
+      return "0h 0min";
     }
 
     let hours = Math.floor(n / 60);
@@ -103,7 +103,7 @@ export default function Detail() {
     <Suspense fallback={<Detailskeleton />}>
       <div className={`w-full h-fit flex justify-center items-center`}>
         <div
-          className={`flex w-[1080px] justify-center flex-col items-start gap-6 py-10 px-[80px] ${
+          className={`flex w-[1230px] justify-center flex-col items-start gap-6 py-10 px-[80px] ${
             mode ? "text-[#09090B]" : "text-[#FFF]"
           }`}>
           <div className="flex w-full pr-3 justify-between items-center self-stretch">
@@ -164,7 +164,7 @@ export default function Detail() {
               style={{
                 backgroundImage: `url(https://image.tmdb.org/t/p/original${data?.backdrop_path})`,
               }}></div>
-            <div className="flex flex-row brightness-100 pt-[300px] pr-[100px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
+            <div className="flex flex-row brightness-100 pt-[300px] pr-[200px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
               <button
                 onClick={handlebutton}
                 className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
@@ -175,7 +175,7 @@ export default function Detail() {
             </div>
           </div>
           <div
-            className={`flex w-fit vh-[50vh] bottom-[32%] absolute ${
+            className={`flex w-fit vh-[50vh] bottom-[32%] ml-[50px] absolute ${
               button ? "flex" : "hidden"
             }`}>
             <iframe
@@ -183,7 +183,7 @@ export default function Detail() {
               src={`https://youtube.com/embed/${trailer(
                 datatrailers
               )}?si=UMWGenzXIx0OnlcK`}
-              className={`w-[920px] h-[500px] mt-10 aspect-video`}></iframe>
+              className={`w-[997px] h-[561px] mt-10 aspect-video`}></iframe>
             <button
               onClick={handlebutton}
               className="flex w-fit h-fit justify-center items-center rounded-full bg-white">
@@ -237,6 +237,8 @@ export default function Detail() {
               {datasimiliar?.slice(0, 5).map((value: Datatrivia) => {
                 return (
                   <Movie
+                    na={`h-[79px]`}
+                    cla={`w-[190px] min-h-[281px] `}
                     key={value.id || "default"}
                     onclick={() => handleonclick(value.id || "")}
                     image={`https://image.tmdb.org/t/p/original${value.poster_path}`}

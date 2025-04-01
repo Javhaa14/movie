@@ -91,6 +91,8 @@ export default function Morelike({
         <div className="w-full h-full grid grid-cols-5 gap-8">
           {datasimiliar?.map((movie: data, index: number) => (
             <Movie
+              cla={`w-[230px] min-h-[340px]`}
+              na={`h-[214px]`}
               key={index}
               onclick={() => handleonclick(movie.id)}
               className={"w-[190px] h-[373px]"}
@@ -104,6 +106,8 @@ export default function Morelike({
         <div className="w-full h-full grid grid-cols-5 gap-8">
           {data?.map((movie: data, index: number) => (
             <Movie
+              cla={`w-[230px] min-h-[340px]`}
+              na={`h-[214px]`}
               key={index}
               onclick={() => handleonclick(movie.id)}
               className={`w-[230px] h-[439px] ${

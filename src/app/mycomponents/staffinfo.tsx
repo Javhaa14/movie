@@ -53,11 +53,13 @@ export const Staffinfo = ({ id, mode }: any) => {
           <p className="font-bold w-[50px]">Writers</p>
           <div className="flex gap-2">
             {data
+
               .filter(
                 (a) =>
                   a.department === "Writing" &&
                   a.known_for_department === "Writing"
               )
+              .slice(0, 5)
               .map((a) => (
                 <p key={a.id} className="font-normal">
                   {a.name} ·
@@ -69,7 +71,6 @@ export const Staffinfo = ({ id, mode }: any) => {
           <div className="h-[1px] self-stretch border-[1px] solid text-[#E4E4E7]" />
         </div>
       </div>
-
       <div className="flex w-full flex-col items-start gap-1 self-stretch">
         <div className="flex items-center gap-[50px] self-stretch text-4">
           <p className="font-bold w-[50px]">Stars</p>

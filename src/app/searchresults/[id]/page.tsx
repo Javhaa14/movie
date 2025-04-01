@@ -33,7 +33,7 @@ export default function Searchresults({
     id: number;
     name: string;
   };
-  
+
   const [data, setData] = useState<MovieData[]>([]);
   const params = useParams();
   const { mode, toggleMode } = useMode();
@@ -45,7 +45,7 @@ export default function Searchresults({
         .then((res) => setData(res.data.results));
     }
   }, [id]);
-  
+
   const [genre, setGenre] = useState<Genre[]>([]);
 
   useEffect(() => {
@@ -62,9 +62,8 @@ export default function Searchresults({
   const [slice, setSlice] = useState(0);
   const [slice2, setSlice2] = useState(8);
   const page = [
-    { slice1: 0, slice2: 8 },
-    { slice1: 8, slice2: 16 },
-    { slice1: 16, slice2: 24 },
+    { slice1: 0, slice2: 10 },
+    { slice1: 10, slice2: 20 },
   ];
   const shiljigch = (huudas: number) => {
     if (huudas >= 0 && huudas <= 2) {
@@ -72,22 +71,21 @@ export default function Searchresults({
       setSlice2(page[huudas].slice2);
     }
   };
-  
+
   const nemegch = () => {
-    if (slice !== 16 && slice2 !== 24) {
-      setSlice(slice + 8);
-      setSlice2(slice2 + 8);
-    }
-  };
-  
-  const hasagch = () => {
-    if (slice !== 0 && slice2 !== 8) {
-      setSlice(slice - 8);
-      setSlice2(slice2 - 8);
+    if (slice !== 10 && slice2 !== 20) {
+      setSlice(slice + 10);
+      setSlice2(slice2 + 10);
     }
   };
 
-  
+  const hasagch = () => {
+    if (slice !== 0 && slice2 !== 10) {
+      setSlice(slice - 10);
+      setSlice2(slice2 - 10);
+    }
+  };
+
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
   const handleSelect = (option: OptionType) => {
     setSelectedOptions((prev) => {
@@ -108,29 +106,29 @@ export default function Searchresults({
           return test.length === selectedOptions.length;
         })
       : data;
-  
+
   console.log(genrefilter, "ho");
   console.log(selectedOptions, "selected");
   console.log(data, "data");
   return (
     <div
-      className={`flex flex-col gap-[74px] w-fit h-[1290px] ${
+      className={`flex justify-center items-center px-[80px] mb-[100px] w-screen h-fit ${
         mode ? "text-[#09090B] bg-white" : "text-[#FFF] bg-black"
       }`}>
-      <div className="flex w-full h-fit px-[80px] flex-col items-start gap-8 self-stretch mt-[63.5px]">
+      <div className="flex w-full h-full flex-col items-start gap-8 self-stretch mt-[63.5px]">
         <p className="self-stretch text-[30px] font-semibold ">
           Search results
         </p>
-        <div className="flex flex-row h-fit items-start gap-7">
-          <div className="flex flex-col h-[804px] justify-between">
-            <div className="flex w-[804px] flex-col items-start gap-8">
+        <div className="flex w-full flex-row h-screen items-start gap-7">
+          <div className="flex w-full flex-col h-fit justify-between">
+            <div className="flex w-full flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <p className="text-[20px] font-semibold">
                   {genrefilter.length} results for "{id.replaceAll("%20", " ")}"
                 </p>
               </div>
-              <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
-                {genrefilter.slice(slice, slice2).map((value) => {
+              <div className="grid grid-cols-5 w-fit h-fit items-center gap-8 self-stretch">
+                {genrefilter.slice(0, 10).map((value) => {
                   return (
                     <Movie
                       className={`w-[165px] h-[331px] ${
@@ -204,13 +202,13 @@ export default function Searchresults({
               </Pagination>
             </div>
           </div>
-          <div className="h-[810px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
-          <div className="flex w-[387px] flex-col items-start gap-5">
+          <div className="h-[826px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+          <div className="flex max-w-[387px] flex-col items-start gap-5">
             <div className="flex w-[213px] flex-col items-start gap-1">
               <h3 className="text-[24px] font-semibold">Search by genre</h3>
               <p className="text-[16px]">See lists of movies by genre</p>
             </div>
-            <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
+            <div className="flex flex-wrap w-full items-start content-start gap-4 self-stretch">
               <Autocomplete
                 options={genre}
                 mode={mode}

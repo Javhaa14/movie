@@ -1,7 +1,7 @@
 "use client";
 import { FaArrowRight } from "react-icons/fa6";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Staffinfo } from "@/app/mycomponents/staffinfo";
 import { Genres } from "@/components/ui/genres";
 import { CiPlay1 } from "react-icons/ci";
@@ -15,8 +15,8 @@ type MovieData = {
   adult: boolean;
   title: string;
   release_date: string;
-  runtime: number|undefined;
-  vote_average: number|undefined;
+  runtime: number | undefined;
+  vote_average: number | undefined;
   poster_path: string;
   backdrop_path: string;
   overview: string;
@@ -27,14 +27,14 @@ type MovieData = {
 type Datatrailer = {
   name: string;
   type: string;
-  key: string; 
+  key: string;
 };
 
 type Datatrivia = {
-  id: string|undefined;
+  id: string | undefined;
   poster_path: string;
   title: string;
-  vote_average: string|undefined
+  vote_average: string | undefined;
 };
 
 export default function Detail() {
@@ -43,8 +43,9 @@ export default function Detail() {
   const [data, setData] = useState<MovieData | null>(null);
   const [datatrailers, setDatatrailers] = useState<Datatrailer[]>([]);
   const [datasimiliar, setDatasimiliar] = useState<Datatrivia[]>([]);
-  const [datagenre, setDatagenre] = useState<MovieData['genres']>([]);
-
+  const [datagenre, setDatagenre] = useState<MovieData["genres"]>([]);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  console.log(iframeRef.current);
   const router = useRouter();
   const [button, setButton] = useState(false);
 
@@ -52,12 +53,11 @@ export default function Detail() {
     if (n === undefined) {
       return "0h 0min"; // Return a default value when undefined
     }
-    
+
     let hours = Math.floor(n / 60);
     let minutes = n % 60;
     return `${hours}h ${minutes}min`;
   }
-  
 
   const trailer = (array: Datatrailer[]) => {
     for (let i = 0; i < array.length; i++) {
@@ -76,33 +76,34 @@ export default function Detail() {
   const handle = (id: string) => {
     router.push(`/morelikethis/${id}`);
   };
-  const handletosearchfilter = (id: number) => { 
+  const handletosearchfilter = (id: number) => {
     router.push(`/searchfilter/${id}`);
   };
-  
+
   useEffect(() => {
     if (id) {
       axiosInstance.get<MovieData>(`movie/${id}?language=en-US`).then((res) => {
         setData(res.data);
       });
       axiosInstance
-        .get(`movie/${id}/videos?api_key=d67d8bebd0f4ff345f6505c99e9d0289&language=en-US`)
+        .get(
+          `movie/${id}/videos?api_key=d67d8bebd0f4ff345f6505c99e9d0289&language=en-US`
+        )
         .then((res) => setDatatrailers(res.data.results));
       axiosInstance
         .get(`movie/${id}/similar?language=en-US&page=1`)
         .then((res) => setDatasimiliar(res.data.results));
-      axiosInstance.get(`movie/${id}?language=en-US`).then((res) => setDatagenre(res.data.genres));
+      axiosInstance
+        .get(`movie/${id}?language=en-US`)
+        .then((res) => setDatagenre(res.data.genres));
     }
   }, [id]);
 
- 
-
-
   return (
     <Suspense fallback={<Detailskeleton />}>
-      <div className={`w-screen h-fit justify-center items-center relative `}>
+      <div className={`w-full h-fit flex justify-center items-center`}>
         <div
-          className={`flex w-full justify-center flex-col items-start gap-6 py-10 px-[80px] ${
+          className={`flex w-[1080px] justify-center flex-col items-start gap-6 py-10 px-[80px] ${
             mode ? "text-[#09090B]" : "text-[#FFF]"
           }`}>
           <div className="flex w-full pr-3 justify-between items-center self-stretch">
@@ -139,14 +140,15 @@ export default function Detail() {
                 <div className="flex flex-col items-start">
                   <div className="flex flex-row items-center justify-center">
                     <p className="text-[18px] font-semibold">
-                      {data?.vote_average!==undefined?(Math.round(data?.vote_average * 10) / 10).toFixed(1):0}
-                      
+                      {data?.vote_average !== undefined
+                        ? (Math.round(data?.vote_average * 10) / 10).toFixed(1)
+                        : 0}
                     </p>
                     <p className="text-[16px] text-[#71717A]">/10</p>
                   </div>
                   <div className="flex flex-col justify-center items-center gap-[10px]">
                     <p className="text-[12px] text-[#71717A]">
-                      {Math.floor(data?.popularity??0)}k
+                      {Math.floor(data?.popularity ?? 0)}k
                     </p>
                   </div>
                 </div>
@@ -162,7 +164,7 @@ export default function Detail() {
               style={{
                 backgroundImage: `url(https://image.tmdb.org/t/p/original${data?.backdrop_path})`,
               }}></div>
-            <div className="flex flex-row brightness-100 pt-[300px] pr-[200px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
+            <div className="flex flex-row brightness-100 pt-[300px] pr-[100px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
               <button
                 onClick={handlebutton}
                 className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
@@ -172,31 +174,43 @@ export default function Detail() {
               <p className="text-[14px] pt-1">2:35</p>
             </div>
           </div>
-          <iframe
-            src={`https://youtube.com/embed/${trailer(
-              datatrailers
-            )}?si=UMWGenzXIx0OnlcK`}
-            className={`mx-[10%] mb-[40%] w-[997px] h-[561px] aspect-video absolute ${
+          <div
+            className={`flex w-fit vh-[50vh] bottom-[32%] absolute ${
               button ? "flex" : "hidden"
-            } `}></iframe>
-          <button
-            onClick={handlebutton}
-            className="flex mt-[7%] ml-[83%] mb-[90%] absolute w-fit h-fit justify-center items-center rounded-full bg-white">
-            <MdCancel
-              className={`size-10 text-black aspect-video ${
-                button ? "flex" : "hidden"
-              }`}
-            />
-          </button>
+            }`}>
+            <iframe
+              ref={iframeRef}
+              src={`https://youtube.com/embed/${trailer(
+                datatrailers
+              )}?si=UMWGenzXIx0OnlcK`}
+              className={`w-[920px] h-[500px] mt-10 aspect-video`}></iframe>
+            <button
+              onClick={handlebutton}
+              className="flex w-fit h-fit justify-center items-center rounded-full bg-white">
+              <MdCancel
+                className={`size-10 text-black aspect-video ${
+                  button ? "flex" : "hidden"
+                }`}
+              />
+            </button>
+          </div>
+
           <div
             className={`flex w-full flex-col items-start gap-5 ${
               mode ? "text-[#09090B]" : "text-[#FFF]"
             }`}>
             <div className="flex items-center gap-3">
-            {datagenre.map((value) => {
-  return <Genres key={value.id} genre={value.name} onClick={()=>{handletosearchfilter(value.id)}}/>;
-})}
-
+              {datagenre.map((value) => {
+                return (
+                  <Genres
+                    key={value.id}
+                    genre={value.name}
+                    onClick={() => {
+                      handletosearchfilter(value.id);
+                    }}
+                  />
+                );
+              })}
             </div>
             <p className="w-full self-stretch text-[16px]">{data?.overview}</p>
             <div className={`flex flex-col items-start gap-5 self-stretch `}>
@@ -204,38 +218,42 @@ export default function Detail() {
             </div>
           </div>
           <div className="flex w-full flex-col items-start gap-8 ">
-  <div className="flex justify-between items-start self-stretch">
-    <p className="w-[198px] text-[24px] font-semibold">
-      More Like This
-    </p>
-    <button
-      onClick={() => {
-        if (id) {
-          handle(id); 
-        }      }}
-      className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
-      <p className="text-[14px]">See more</p>
-      <FaArrowRight className="size-[16px]" />
-    </button>
-  </div>
-  <div className={`flex items-start gap-8 self-stretch `}>
-    {datasimiliar?.slice(0, 5).map((value: Datatrivia) => {
-      return (
-        <Movie
-        key={value.id || 'default'}
-        onclick={() => handleonclick(value.id || '')}
-                  image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
-          rating={(Math.round(Number(value.vote_average ?? 0) * 10) / 10).toFixed(1)}
-          name={value.title}
-          className={`w-[190px] h-[372px] ${
-            mode ? "text-[#09090B] bg-[#F4F4F5]" : "text-[#FFF] bg-[#222222]"
-          }`}
-        />
-      );
-    })}
-  </div>
-</div>
-
+            <div className="flex justify-between items-start self-stretch">
+              <p className="w-[198px] text-[24px] font-semibold">
+                More Like This
+              </p>
+              <button
+                onClick={() => {
+                  if (id) {
+                    handle(id);
+                  }
+                }}
+                className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+                <p className="text-[14px]">See more</p>
+                <FaArrowRight className="size-[16px]" />
+              </button>
+            </div>
+            <div className={`flex items-start gap-8 self-stretch `}>
+              {datasimiliar?.slice(0, 5).map((value: Datatrivia) => {
+                return (
+                  <Movie
+                    key={value.id || "default"}
+                    onclick={() => handleonclick(value.id || "")}
+                    image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
+                    rating={(
+                      Math.round(Number(value.vote_average ?? 0) * 10) / 10
+                    ).toFixed(1)}
+                    name={value.title}
+                    className={`w-[190px] h-[372px] ${
+                      mode
+                        ? "text-[#09090B] bg-[#F4F4F5]"
+                        : "text-[#FFF] bg-[#222222]"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </Suspense>

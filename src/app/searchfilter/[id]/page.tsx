@@ -20,7 +20,6 @@ export default function Searchfilter({
 }: {
   params: { id: string };
 }) {
-  
   type OptionType = {
     id: number;
     name: string;
@@ -36,10 +35,10 @@ export default function Searchfilter({
 
   const [genre, setGenre] = useState<OptionType[]>([]);
   const { mode, toggleMode } = useMode();
-  const [genredata, setGenredata] = useState<MovieType[]>([]); 
+  const [genredata, setGenredata] = useState<MovieType[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
-  console.log(selectedOptions,"gulg");
-  
+  console.log(selectedOptions, "gulg");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -63,7 +62,7 @@ export default function Searchfilter({
       }
     }
   }, [genre, id]);
-console.log(genredata,"data");
+  console.log(genredata, "data");
 
   const handleSelect = (option: OptionType) => {
     setSelectedOptions((prev) => {
@@ -79,13 +78,13 @@ console.log(genredata,"data");
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
   };
-  const idtoname=(too:any)=>{
+  const idtoname = (too: any) => {
     for (let z = 0; z < genre.length; z++) {
-      if (too==genre[z].id) {
-    return genre[z].name
-      }    
+      if (too == genre[z].id) {
+        return genre[z].name;
+      }
     }
-  }
+  };
   const genrefilter =
     selectedOptions.length > 0
       ? genredata?.filter((item) => {
@@ -122,11 +121,18 @@ console.log(genredata,"data");
           <div className="flex flex-col h-[804px] justify-between">
             <div className="flex w-[804px] flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
-                <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">{genrefilter.length} titles in {selectedOptions.length==0?"":selectedOptions.map((value)=>{
-return  <p className="text-[20px] font-semibold">{value.name},</p>
-                  })}</div>
-                  
-               
+                <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">
+                  {genrefilter.length} titles in{" "}
+                  {selectedOptions.length == 0
+                    ? ""
+                    : selectedOptions.map((value) => {
+                        return (
+                          <p className="text-[20px] font-semibold">
+                            {value.name},
+                          </p>
+                        );
+                      })}
+                </div>
               </div>
               <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
                 {genrefilter?.slice(0, 12).map((value) => {
@@ -140,7 +146,7 @@ return  <p className="text-[20px] font-semibold">{value.name},</p>
                       onclick={() => {
                         handletodetail(value.id);
                       }}
-                      key={value.id} 
+                      key={value.id}
                       name={value.title}
                       image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
                       rating={(

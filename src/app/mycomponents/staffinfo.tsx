@@ -17,18 +17,16 @@ export const Staffinfo = ({ id, mode }: any) => {
     job: string;
   };
 
-  const [data, setData] = useState<Data[]>([]); 
-  const [data2, setData2] = useState<Data[]>([]); 
+  const [data, setData] = useState<Data[]>([]);
+  const [data2, setData2] = useState<Data[]>([]);
 
   useEffect(() => {
-    axiosInstance
-      .get(`movie/${id}/credits?language=en-US`)
-      .then((res) => {
-        setData(res.data.crew || []);
-        setData2(res.data.cast || []);
-      })
-  }, [id]); 
-console.log(data);
+    axiosInstance.get(`movie/${id}/credits?language=en-US`).then((res) => {
+      setData(res.data.crew || []);
+      setData2(res.data.cast || []);
+    });
+  }, [id]);
+  console.log(data);
 
   return (
     <div className={`w-full ${mode ? "" : "text-[#FFF]"}`}>
@@ -37,7 +35,7 @@ console.log(data);
           <p className="font-bold w-[50px]">Director</p>
           <div className="gap-2 flex flex-row">
             {data
-              .filter((a) => a.job === "Director") 
+              .filter((a) => a.job === "Director")
               .map((a) => (
                 <p key={a.id} className="flex font-normal w-fit self-stretch">
                   {a.name} ·
@@ -57,8 +55,9 @@ console.log(data);
             {data
               .filter(
                 (a) =>
-                  a.department === "Writing" && a.known_for_department === "Writing"
-              ) 
+                  a.department === "Writing" &&
+                  a.known_for_department === "Writing"
+              )
               .map((a) => (
                 <p key={a.id} className="font-normal">
                   {a.name} ·

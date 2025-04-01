@@ -31,12 +31,11 @@ export default function Morelike({
 }) {
   const { mode, toggleMode } = useMode();
   const params = useParams();
-  console.log("params", params.id);
-
-  console.log(id, "id");
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
   const [datasimiliar, setDatasimiliar] = useState<data[]>([]);
   const [data, setData] = useState<data[]>([]);
-  const [pagcount, setPagcount] = useState<number>(1);
+  const [pagcount, setPagcount] = useState<number>(Number(page) || 1);
   const router = useRouter();
   const handleonclick = (id: string) => {
     router.push(`/detail/${id}`);
@@ -58,16 +57,9 @@ export default function Morelike({
 
   console.log(totalpages, "total");
 
-  function SearchBar() {
-    const searchParams = useSearchParams();
+  // URL -> `/dashboard?search=my-project`
+  // `search` -> 'my-project'
 
-    const search = searchParams.get("search");
-
-    // URL -> `/dashboard?search=my-project`
-    // `search` -> 'my-project'
-    return <>Search: {search}</>;
-  }
-  const searchParams = useSearchParams();
   const nemegch = () => {
     if (pagcount < totalpages) {
       setPagcount(pagcount + 1);
@@ -114,7 +106,11 @@ export default function Morelike({
             <Movie
               key={index}
               onclick={() => handleonclick(movie.id)}
-              className={"w-[190px] h-[373px]"}
+              className={`w-[230px] h-[439px] ${
+                mode
+                  ? "text-[#09090B] bg-[#F4F4F5]"
+                  : "text-[#FFF] bg-[#222222]"
+              }`}
               image={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
               rating={(Math.round(movie.vote_average * 10) / 10).toFixed(1)}
               name={movie.title}
@@ -129,13 +125,13 @@ export default function Morelike({
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious onClick={hasagch} />
+              <PaginationPrevious
+                href={`?page=${pagcount > 1 ? pagcount - 1 : pagcount}`}
+              />
             </PaginationItem>
-            {pagcount > 1 && pagcount > 2 && (
+            {pagcount > 2 && (
               <PaginationItem>
-                <PaginationLink onClick={() => shiljigch(1)}>
-                  {1}
-                </PaginationLink>
+                <PaginationLink href={`?page=${1}`}>{1}</PaginationLink>
               </PaginationItem>
             )}
             {pagcount > 3 && (
@@ -145,13 +141,14 @@ export default function Morelike({
             )}
             {pagcount > 1 && (
               <PaginationItem>
-                <PaginationLink onClick={() => shiljigch(pagcount - 1)}>
+                <PaginationLink href={`?page=${pagcount - 1}`}>
                   {pagcount - 1}
                 </PaginationLink>
               </PaginationItem>
             )}
             <PaginationItem>
               <PaginationLink
+                href={`?page=${pagcount}`}
                 className={`${
                   mode
                     ? pagcount === 0
@@ -160,15 +157,14 @@ export default function Morelike({
                     : pagcount === 0
                     ? "bg-blue-500 text-white"
                     : "bg-white text-black"
-                } px-4 py-2 rounded-lg transition-colors duration-300`}
-                onClick={() => shiljigch(pagcount)}>
+                } px-4 py-2 rounded-lg transition-colors duration-300`}>
                 {pagcount}
               </PaginationLink>
             </PaginationItem>
 
             {pagcount < totalpages && (
               <PaginationItem>
-                <PaginationLink onClick={nemegch}>
+                <PaginationLink href={`?page=${pagcount + 1}`}>
                   {pagcount + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -180,9 +176,9 @@ export default function Morelike({
               </PaginationItem>
             )}
 
-            {pagcount < totalpages && pagcount < totalpages - 1 && (
+            {pagcount < totalpages - 1 && (
               <PaginationItem>
-                <PaginationLink onClick={() => shiljigch(totalpages)}>
+                <PaginationLink href={`?page=${totalpages}`}>
                   {totalpages}
                 </PaginationLink>
               </PaginationItem>
@@ -190,7 +186,11 @@ export default function Morelike({
 
             {pagcount < totalpages && (
               <PaginationItem>
-                <PaginationNext onClick={nemegch} />
+                <PaginationNext
+                  href={`?page=${
+                    pagcount < totalpages ? pagcount + 1 : pagcount
+                  }`}
+                />
               </PaginationItem>
             )}
           </PaginationContent>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Suspense, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
@@ -16,7 +16,6 @@ import { useMode } from "./modecontext";
 import { Pageskel } from "@/components/ui/pageskel";
 import { axiosInstance } from "@/lib/utils";
 
-// Define the type for a movie item
 interface Movie {
   id: string;
   backdrop_path: string;
@@ -28,7 +27,6 @@ interface Movie {
 export default function Home() {
   const { mode, toggleMode } = useMode();
 
-  // Initialize the state with the correct type for movie data
   const [data, setData] = useState<Movie[] | undefined>(undefined);
 
   useEffect(() => {
@@ -55,7 +53,6 @@ export default function Home() {
     router.push(`/morelikethis/${id}`);
   };
 
-  // Show a loading skeleton if data is not available yet
   if (!data || !sectiondata) {
     return <Pageskel />;
   }

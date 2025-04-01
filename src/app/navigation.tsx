@@ -38,8 +38,8 @@ export const Navigation = () => {
   };
   const [genre, setGenre] = useState<Genre[]>([]);
   const [data, setData] = useState<MovieData[]>([]);
-    const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
-    const [inputvalue, setInputvalue] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
+  const [inputvalue, setInputvalue] = useState("");
   const debouncedInputvalue = useDebounce(inputvalue, 200);
   const handleonchange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputvalue(event.target.value);
@@ -76,13 +76,11 @@ export const Navigation = () => {
     router.push(`/searchfilter/${id}`);
     setInputvalue("");
   };
-  
+
   const handleSelect = (option: OptionType) => {
-    console.log("Selected Option ID:", option.id);  
-    handletosearchfilter(option.id.toString()); }
-  
-  
-  
+    console.log("Selected Option ID:", option.id);
+    handletosearchfilter(option.id.toString());
+  };
 
   return (
     <div
@@ -135,12 +133,12 @@ export const Navigation = () => {
                   <div className="h-[1px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
                 </div>
                 <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
-                 <Autocomplete
-                                 options={genre}
-                                 mode={mode}
-                                 selectedOptions={selectedOptions}
-                                 onSelect={handleSelect}
-                               />
+                  <Autocomplete
+                    options={genre}
+                    mode={mode}
+                    selectedOptions={selectedOptions}
+                    onSelect={handleSelect}
+                  />
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

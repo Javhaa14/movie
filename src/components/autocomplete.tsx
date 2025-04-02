@@ -8,7 +8,7 @@ type OptionType = {
 };
 interface AutocompleteProps {
   options: OptionType[];
-  selectedOptions: OptionType[];
+  selectedOptions: string[];
   onSelect: (option: OptionType) => void;
   mode: boolean;
 }
@@ -25,7 +25,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         className={`flex items-start content-start gap-4 self-stretch flex-wrap `}>
         {options.map((option) => {
           const isSelected = selectedOptions.some(
-            (item) => item.id === option.id
+            (item) => Number(item) == option.id
           );
           return (
             <button

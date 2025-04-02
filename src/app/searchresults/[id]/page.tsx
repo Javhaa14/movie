@@ -208,7 +208,7 @@ export default function Searchresults({
               </Pagination>
             </div>
           </div>
-          <div className="h-[826px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+          <div className="h-[1850px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
           <div className="flex max-w-[387px] flex-col items-start gap-5">
             <div className="flex w-[213px] flex-col items-start gap-1">
               <h3 className="text-[24px] font-semibold">Search by genre</h3>

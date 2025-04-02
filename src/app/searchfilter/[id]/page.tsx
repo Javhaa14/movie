@@ -1,5 +1,5 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Movie } from "@/components/ui/movie";
 import { Autocomplete } from "@/components/autocomplete";
@@ -15,91 +15,85 @@ import {
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import path from "path";
 
-export default function Searchfilter({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
-  type OptionType = {
-    id: number;
-    name: string;
-  };
+type OptionType = {
+  id: number;
+  name: string;
+};
 
-  type MovieType = {
-    id: string;
-    title: string;
-    poster_path: string;
-    vote_average: number;
-    genre_ids: number[];
-  };
-  const params = useParams();
+type MovieType = {
+  id: string;
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  genre_ids: number[];
+};
+type Pages = {
+  page: number;
+  results: MovieType;
+  total_pages: number;
+  total_results: number;
+};
+
+export default function Searchfilter() {
+  const { id } = useParams();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const [pagcount, setPagcount] = useState<number>(Number(page) || 1);
-  const totalpages = 500;
-
+  const [totalpages, setTotalpages] = useState<number>(0);
   const [genre, setGenre] = useState<OptionType[]>([]);
   const { mode, toggleMode } = useMode();
   const [genredata, setGenredata] = useState<MovieType[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
-  console.log(selectedOptions, "gulg");
+  const [pages, setPages] = useState<Pages[]>([]);
+  const pathName = usePathname();
 
   const router = useRouter();
-
+  const fetchData = async () => {
+    const { data } = await axiosInstance.get(
+      `discover/movie?language=en&with_genres=${genreParams.join(
+        ","
+      )}&page=${pagcount}`
+    );
+    setGenredata(data.results), setPages(data), setTotalpages(data.total_pages);
+  };
   useEffect(() => {
     axiosInstance
       .get(`genre/movie/list?language=en`)
       .then((res) => setGenre(res.data.genres));
   }, []);
+  const genreParams = searchParams.getAll("genres");
 
   useEffect(() => {
-    if (id) {
-      axiosInstance
-        .get(`discover/movie?language=en&with_genres=${id}&page=${pagcount}`)
-        .then((res) => setGenredata(res.data.results));
-    }
-  }, [id]);
-  useEffect(() => {
-    if (genre.length > 0 && id) {
-      const genreName = genre.find((g) => g.id.toString() === id)?.name;
-      if (genreName) {
-        setSelectedOptions([{ id: Number(id), name: genreName }]);
-      }
-    }
-  }, [genre, id]);
-  console.log(genredata, "data");
+    fetchData();
+  }, [searchParams]);
 
   const handleSelect = (option: OptionType) => {
-    setSelectedOptions((prev) => {
-      const isSelected = prev.some((item) => item.name === option.name);
-      if (isSelected) {
-        return prev.filter((item) => item.name !== option.name);
-      } else {
-        return [...prev, option];
-      }
-    });
+    const params = new URLSearchParams(searchParams.toString());
+    let Paramsgenres = params.getAll("genres");
+
+    // Toggle selection
+    if (Paramsgenres.includes(option.id.toString())) {
+      Paramsgenres = Paramsgenres.filter(
+        (genre) => genre !== option.id.toString()
+      );
+    } else {
+      Paramsgenres.push(option.id.toString());
+    }
+
+    // Update URL parameters
+    params.delete("genres");
+    Paramsgenres.forEach((genre) => params.append("genres", genre));
+
+    router.push(`?${params.toString()}`, { scroll: false });
+
+    console.log(Paramsgenres, "genres");
   };
 
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
   };
-  const idtoname = (too: any) => {
-    for (let z = 0; z < genre.length; z++) {
-      if (too == genre[z].id) {
-        return genre[z].name;
-      }
-    }
-  };
-  const genrefilter =
-    selectedOptions.length > 0
-      ? genredata?.filter((item) => {
-          const test = selectedOptions.filter((option) => {
-            return item.genre_ids?.includes(option.id);
-          });
-          return test.length === selectedOptions.length;
-        })
-      : genredata;
+  console.log(pathName, "path");
 
   return (
     <div
@@ -118,30 +112,29 @@ export default function Searchfilter({
               <Autocomplete
                 options={genre}
                 mode={mode}
-                selectedOptions={selectedOptions}
+                selectedOptions={genreParams}
                 onSelect={handleSelect}
               />
             </div>
           </div>
-          <div className="h-fit self-stretch border-[1px] solid border-[#E4E4E7]"></div>
+          <div className="h-[1850px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
           <div className="flex flex-col h-fit justify-between">
             <div className="flex w-[804px] h-fit flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">
-                  {genrefilter.length} titles in{" "}
-                  {selectedOptions.length == 0
-                    ? ""
-                    : selectedOptions.map((value) => {
-                        return (
-                          <p className="text-[20px] font-semibold">
-                            {value.name},
-                          </p>
-                        );
-                      })}
+                  {pages.total_results} titles in
+                  {searchParams.getAll("genres").map((genreId) => {
+                    const genreItem = genre.find(
+                      (g) => g.id.toString() === genreId
+                    );
+                    return genre ? (
+                      <p key={genreItem?.id}>{genreItem?.name}</p>
+                    ) : null;
+                  })}
                 </div>
               </div>
               <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
-                {genrefilter?.slice(0, 20).map((value) => {
+                {genredata?.slice(0, 20).map((value) => {
                   return (
                     <Movie
                       na={`h-[149px]`}
@@ -171,7 +164,9 @@ export default function Searchfilter({
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      href={`?page=${pagcount > 1 ? pagcount - 1 : pagcount}`}
+                      href={`${pathName}?page=${
+                        pagcount > 1 ? pagcount - 1 : pagcount
+                      }`}
                     />
                   </PaginationItem>
                   {pagcount > 2 && (
@@ -232,7 +227,7 @@ export default function Searchfilter({
                   {pagcount < totalpages && (
                     <PaginationItem>
                       <PaginationNext
-                        href={`?page=${
+                        href={`${pathName}?page=${
                           pagcount < totalpages ? pagcount + 1 : pagcount
                         }`}
                       />

@@ -73,7 +73,7 @@ export const Navigation = () => {
     setInputvalue("");
   };
   const handletosearchfilter = (id: string) => {
-    router.push(`/searchfilter/${id}`);
+    router.push(`/searchfilter/${id}?genres=${id}`);
     setInputvalue("");
   };
 

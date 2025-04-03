@@ -1,8 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import axios from "axios";
-import { Movie } from "@/components/ui/movie";
+import { Movie } from "@/components/mycomponents/movie";
 import {
   Pagination,
   PaginationContent,
@@ -36,6 +35,8 @@ export default function Morelike({
   const [datasimiliar, setDatasimiliar] = useState<data[]>([]);
   const [data, setData] = useState<data[]>([]);
   const [pagcount, setPagcount] = useState<number>(Number(page) || 1);
+  const [totalpages, setTotalpages] = useState<number>(1);
+
   const router = useRouter();
   const handleonclick = (id: string) => {
     router.push(`/detail/${id}`);
@@ -43,40 +44,32 @@ export default function Morelike({
   useEffect(() => {
     axiosInstance
       .get(`movie/${params.id}/similar?language=en-US&page=${pagcount}`)
-      .then((res) => setDatasimiliar(res.data.results));
-  }, [pagcount]);
+      .then(
+        (res) => (
+          setDatasimiliar(res.data.results),
+          setTotalpages(res.data.total_pages > 500 ? 500 : res.data.total_pages)
+        )
+      );
+  }, [pagcount, totalpages]);
+  console.log(totalpages, "total");
 
-  const totalpages = 500;
+  useEffect(() => {
+    setPagcount(Number(searchParams.get("page")) || 1);
+  }, [searchParams]);
 
   console.log(pagcount, "pagenumber");
   useEffect(() => {
     axiosInstance
       .get(`movie/${id}?language=en-US&page=${pagcount}`)
-      .then((res) => setData(res.data.results));
+      .then(
+        (res) => (
+          setData(res.data.results),
+          setTotalpages(res.data.total_pages > 500 ? 500 : res.data.total_pages)
+        )
+      );
   }, [pagcount]);
 
   console.log(totalpages, "total");
-
-  // URL -> `/dashboard?search=my-project`
-  // `search` -> 'my-project'
-
-  const nemegch = () => {
-    if (pagcount < totalpages) {
-      setPagcount(pagcount + 1);
-    }
-  };
-
-  const hasagch = () => {
-    if (pagcount > 1) {
-      setPagcount(pagcount - 1);
-    }
-  };
-
-  const shiljigch = (page: number) => {
-    if (page >= 1 && page <= totalpages) {
-      setPagcount(page);
-    }
-  };
 
   return (
     <div className="w-screen h-fit flex flex-col mt-[52px] ">
@@ -95,7 +88,11 @@ export default function Morelike({
               na={`h-[214px]`}
               key={index}
               onclick={() => handleonclick(movie.id)}
-              className={"w-[190px] h-[373px]"}
+              className={`w-[230px] h-[439px] ${
+                mode
+                  ? "text-[#09090B] bg-[#F4F4F5]"
+                  : "text-[#FFF] bg-[#222222]"
+              }`}
               image={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
               rating={(Math.round(movie.vote_average * 10) / 10).toFixed(1)}
               name={movie.title}

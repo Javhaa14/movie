@@ -1,8 +1,8 @@
 "use client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Movie } from "@/components/ui/movie";
-import { Autocomplete } from "@/components/autocomplete";
+import { Movie } from "@/components/mycomponents/movie";
+import { Autocomplete } from "@/components/ui/autocomplete";
 import { useMode } from "@/app/modecontext";
 import {
   Pagination,
@@ -15,8 +15,7 @@ import {
 } from "@/components/ui/pagination";
 import { axiosInstance } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
-import path from "path";
-
+import { Noresult } from "@/components/mycomponents/noresult";
 type OptionType = {
   id: number;
   name: string;
@@ -45,7 +44,7 @@ export default function Searchfilter() {
   const [genre, setGenre] = useState<OptionType[]>([]);
   const { mode, toggleMode } = useMode();
   const [genredata, setGenredata] = useState<MovieType[]>([]);
-  const [pages, setPages] = useState<Pages[]>([]);
+  const [pages, setPages] = useState<Pages | null>(null);
   const pathName = usePathname();
 
   const router = useRouter();
@@ -66,6 +65,9 @@ export default function Searchfilter() {
 
   useEffect(() => {
     fetchData();
+  }, [searchParams, pagcount]);
+  useEffect(() => {
+    setPagcount(Number(searchParams.get("page")) || 1);
   }, [searchParams]);
 
   const handleSelect = (option: OptionType) => {
@@ -93,7 +95,14 @@ export default function Searchfilter() {
   const handletodetail = (id: string) => {
     router.push(`/detail/${id}`);
   };
-  console.log(pathName, "path");
+
+  const updatePageParam = (newPage: number) => {
+    const updatedParams = new URLSearchParams(searchParams.toString());
+    updatedParams.set("page", newPage > 0 ? newPage.toString() : "1");
+
+    return updatedParams.toString();
+  };
+  console.log(updatePageParam(pagcount), "updated");
 
   return (
     <div
@@ -102,13 +111,14 @@ export default function Searchfilter() {
       }`}>
       <div className="flex w-full h-fit px-[80px] flex-col items-start gap-8 self-stretch mt-[63.5px]">
         <p className="self-stretch text-[30px] font-semibold ">Search filter</p>
-        <div className="flex flex-row h-fit items-start gap-7">
-          <div className="flex w-[387px] flex-col items-start gap-5">
+        <div className="flex flex-row h-fit items-start gap-7 ">
+          <div className="flex w-[387px] flex-col items-start gap-5 sticky top-20">
             <div className="flex w-[213px] flex-col items-start gap-1">
               <h3 className="text-[24px] font-semibold">Genres</h3>
               <p className="text-[16px]">See lists of movies by genre</p>
             </div>
-            <div className="flex items-start content-start gap-4 self-stretch flex-wrap">
+
+            <div className="flex items-start content-start gap-4 self-stretch flex-wrap ">
               <Autocomplete
                 options={genre}
                 mode={mode}
@@ -117,46 +127,50 @@ export default function Searchfilter() {
               />
             </div>
           </div>
-          <div className="h-[1850px] self-stretch border-[1px] solid border-[#E4E4E7]"></div>
-          <div className="flex flex-col h-fit justify-between">
+          <div className="h-auto min-h-[500px] self-stretch border-[1px] solid border-[#E4E4E7] mb-[100px]"></div>
+          <div className="flex flex-col h-fit justify-between pl-[50px]">
             <div className="flex w-[804px] h-fit flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-8">
                 <div className="text-[20px] font-semibold flex flex-row w-fit gap-2">
-                  {pages.total_results} titles in
+                  {pages?.total_results} titles in
                   {searchParams.getAll("genres").map((genreId) => {
                     const genreItem = genre.find(
                       (g) => g.id.toString() === genreId
                     );
                     return genre ? (
-                      <p key={genreItem?.id}>{genreItem?.name}</p>
+                      <p key={genreItem?.id}>{genreItem?.name},</p>
                     ) : null;
                   })}
                 </div>
               </div>
-              <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
-                {genredata?.slice(0, 20).map((value) => {
-                  return (
-                    <Movie
-                      na={`h-[149px]`}
-                      cla={`w-[165px] min-h-[244px] `}
-                      className={`w-[165px] h-[331px] ${
-                        mode
-                          ? "text-[#09090B] bg-[#F4F4F5]"
-                          : "text-[#FFF] bg-[#222222]"
-                      }`}
-                      onclick={() => {
-                        handletodetail(value.id);
-                      }}
-                      key={value.id}
-                      name={value.title}
-                      image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
-                      rating={(
-                        Math.round(value.vote_average * 10) / 10
-                      ).toFixed(1)}
-                    />
-                  );
-                })}
-              </div>
+              {genredata.length == 0 ? (
+                <Noresult mode={mode} />
+              ) : (
+                <div className="grid grid-cols-4 w-fit h-fit items-center gap-8 self-stretch">
+                  {genredata.slice(0, 20).map((value) => {
+                    return (
+                      <Movie
+                        na={`149px`}
+                        cla={`w-[165px] min-h-[244px] `}
+                        className={`w-[165px] h-[331px] ${
+                          mode
+                            ? "text-[#09090B] bg-[#F4F4F5]"
+                            : "text-[#FFF] bg-[#222222]"
+                        }`}
+                        onclick={() => {
+                          handletodetail(value.id);
+                        }}
+                        key={value.id}
+                        name={value.title}
+                        image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
+                        rating={(
+                          Math.round(value.vote_average * 10) / 10
+                        ).toFixed(1)}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="flex w-full flex-col items-end gap-[10px] self-stretch mt-8 mb-[76px]">
@@ -164,14 +178,14 @@ export default function Searchfilter() {
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      href={`${pathName}?page=${
-                        pagcount > 1 ? pagcount - 1 : pagcount
-                      }`}
+                      href={`${pathName}?${updatePageParam(pagcount - 1)}`}
                     />
                   </PaginationItem>
                   {pagcount > 2 && (
                     <PaginationItem>
-                      <PaginationLink href={`?page=${1}`}>{1}</PaginationLink>
+                      <PaginationLink href={`?${updatePageParam(1)}`}>
+                        {1}
+                      </PaginationLink>
                     </PaginationItem>
                   )}
                   {pagcount > 3 && (
@@ -181,14 +195,15 @@ export default function Searchfilter() {
                   )}
                   {pagcount > 1 && (
                     <PaginationItem>
-                      <PaginationLink href={`?page=${pagcount - 1}`}>
+                      <PaginationLink
+                        href={`?${updatePageParam(pagcount - 1)}`}>
                         {pagcount - 1}
                       </PaginationLink>
                     </PaginationItem>
                   )}
                   <PaginationItem>
                     <PaginationLink
-                      href={`?page=${pagcount}`}
+                      href={`?${updatePageParam(pagcount)}`}
                       className={`${
                         mode
                           ? pagcount === 0
@@ -204,7 +219,8 @@ export default function Searchfilter() {
 
                   {pagcount < totalpages && (
                     <PaginationItem>
-                      <PaginationLink href={`?page=${pagcount + 1}`}>
+                      <PaginationLink
+                        href={`?${updatePageParam(pagcount + 1)}`}>
                         {pagcount + 1}
                       </PaginationLink>
                     </PaginationItem>
@@ -218,7 +234,7 @@ export default function Searchfilter() {
 
                   {pagcount < totalpages - 1 && (
                     <PaginationItem>
-                      <PaginationLink href={`?page=${totalpages}`}>
+                      <PaginationLink href={`?${updatePageParam(totalpages)}`}>
                         {totalpages}
                       </PaginationLink>
                     </PaginationItem>
@@ -227,9 +243,7 @@ export default function Searchfilter() {
                   {pagcount < totalpages && (
                     <PaginationItem>
                       <PaginationNext
-                        href={`${pathName}?page=${
-                          pagcount < totalpages ? pagcount + 1 : pagcount
-                        }`}
+                        href={`${pathName}?${updatePageParam(pagcount + 1)}`}
                       />
                     </PaginationItem>
                   )}

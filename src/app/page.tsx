@@ -6,14 +6,13 @@ import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { List } from "@/components/ui/list";
-import { Nowplaying } from "@/components/ui/nowplaying";
+import { List } from "@/components/mycomponents/list";
+import { Nowplaying } from "@/components/mycomponents/nowplaying";
 import { useMode } from "./modecontext";
-import { Pageskel } from "@/components/ui/pageskel";
+import { Pageskel } from "@/components/mycomponents/skeleton/pageskel";
 import { axiosInstance } from "@/lib/utils";
 
 interface Movie {

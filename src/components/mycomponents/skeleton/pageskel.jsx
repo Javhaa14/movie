@@ -1,4 +1,4 @@
-import { ListSkeleton } from "./listskeleton";
+import { ListSkeleton } from "@/components/mycomponents/skeleton/listskeleton";
 export const Pageskel = ({}) => {
   const arr = [0, 1, 2];
   return (

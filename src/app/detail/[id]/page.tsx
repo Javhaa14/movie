@@ -2,13 +2,13 @@
 import { FaArrowRight } from "react-icons/fa6";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Staffinfo } from "@/app/mycomponents/staffinfo";
-import { Genres } from "@/components/ui/genres";
+import { Staffinfo } from "@/components/mycomponents/staffinfo";
+import { Genres } from "@/components/mycomponents/genres";
 import { CiPlay1 } from "react-icons/ci";
-import { Movie } from "@/components/ui/movie";
+import { Movie } from "@/components/mycomponents/movie";
 import { MdCancel } from "react-icons/md";
 import { useMode } from "@/app/modecontext";
-import { Detailskeleton } from "@/components/ui/detailskeleton";
+import { Detailskeleton } from "@/components/mycomponents/skeleton/detailskeleton";
 import { axiosInstance } from "@/lib/utils";
 
 type MovieData = {
@@ -77,7 +77,7 @@ export default function Detail() {
     router.push(`/morelikethis/${id}`);
   };
   const handletosearchfilter = (id: number) => {
-    router.push(`/searchfilter/${id}`);
+    router.push(`/searchfilter/${id}?genres=${id}`);
   };
 
   useEffect(() => {
@@ -98,7 +98,9 @@ export default function Detail() {
         .then((res) => setDatagenre(res.data.genres));
     }
   }, [id]);
-
+  if (!data || !datatrailers || !datasimiliar || !datagenre) {
+    return <Detailskeleton />;
+  }
   return (
     <Suspense fallback={<Detailskeleton />}>
       <div className={`w-full h-fit flex justify-center items-center`}>

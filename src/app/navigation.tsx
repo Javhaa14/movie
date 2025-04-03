@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef, ChangeEvent, use } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
-import { Genres } from "@/components/ui/genres";
+import { Genres } from "@/components/mycomponents/genres";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,12 +13,12 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/mycomponents/input";
 import { MdSunny } from "react-icons/md";
-import { Searchmovie } from "@/components/ui/searchmovie";
+import { Searchmovie } from "@/components/mycomponents/searchmovie";
 import { useMode } from "./modecontext";
 import { axiosInstance } from "@/lib/utils";
-import { Autocomplete } from "@/components/autocomplete";
+import { Autocomplete } from "@/components/ui/autocomplete";
 export const Navigation = () => {
   const { mode, toggleMode } = useMode();
   type MovieData = {
@@ -136,7 +136,7 @@ export const Navigation = () => {
                   <Autocomplete
                     options={genre}
                     mode={mode}
-                    selectedOptions={selectedOptions}
+                    selectedOptions={null}
                     onSelect={handleSelect}
                   />
                 </div>

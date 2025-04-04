@@ -48,7 +48,23 @@ export default function Detail() {
   console.log(iframeRef.current);
   const router = useRouter();
   const [button, setButton] = useState(false);
-
+  const handleFullscreen = () => {
+    if (iframeRef.current) {
+      const iframeElement = iframeRef.current;
+  
+      if (iframeElement.requestFullscreen) {
+        iframeElement.requestFullscreen();
+      } else if ((iframeElement as any).mozRequestFullScreen) { // Firefox legacy method
+        (iframeElement as any).mozRequestFullScreen();
+      } else if ((iframeElement as any).webkitRequestFullscreen) { // Chrome, Safari
+        (iframeElement as any).webkitRequestFullscreen();
+      } else if ((iframeElement as any).msRequestFullscreen) { // IE/Edge
+        (iframeElement as any).msRequestFullscreen();
+      }
+    }
+  };
+  
+  
   function timeConvert(n: number | undefined): string {
     if (n === undefined) {
       return "0h 0min";
@@ -103,24 +119,50 @@ export default function Detail() {
   }
   return (
     <Suspense fallback={<Detailskeleton />}>
-      <div className={`w-full h-fit flex justify-center items-center`}>
+      <div className={`w-full h-fit flex justify-center items-center relative`}>
+      <div
+            className={`w-full h-full pt-10 z-40 absolute ${
+              button ? "flex" : "hidden" 
+            } justify-center bg-[rgba(0,0,0,0.5)]`}>  
+            <button
+              onClick={handleFullscreen}
+              className="flex size-10">
+            </button>
+            <iframe
+              ref={iframeRef}
+              src={`https://youtube.com/embed/${trailer(
+                datatrailers
+              )}?si=UMWGenzXIx0OnlcK`}
+            allowFullScreen
+              className={`w-[997px] h-[561px] rounded-xl mt-10 aspect-video`}></iframe>
+            
+            <button
+              onClick={handlebutton}
+              className="flex w-fit h-fit justify-center items-center rounded-full bg-white">
+              <MdCancel
+                className={`size-10 text-black aspect-video ${
+                  button ? "flex" : "hidden"
+                }`}
+              />
+            </button>
+          </div>
         <div
-          className={`flex w-[1230px] justify-center flex-col items-start gap-6 py-10 px-[80px] ${
+          className={`flex w-[375px] sm:w-[1230px] justify-center flex-col items-start gap-6 pt-8 sm:py-10 px-0 sm:px-[80px] ${
             mode ? "text-[#09090B]" : "text-[#FFF]"
           }`}>
-          <div className="flex w-full pr-3 justify-between items-center self-stretch">
-            <div className="flex w-fit flex-col items-start gap-1">
+          <div className="flex w-full px-5 sm:pr-3 justify-normal sm:justify-between items-center self-stretch gap-10 sm:gap-0">
+            <div className="flex w-[211px] sm:w-fit flex-col items-start gap-1">
               <a
                 href="https://hdplayer.icu/index.php?id=6574&key=146ff4"
-                className="self-stretch w-fit text-[36px] font-bold">
+                className="self-stretch w-fit text-[24px] sm:text-[36px] font-bold">
                 {data?.title}
               </a>
-              <p className="self-stretch text-[18px] w-[300px]">
+              <p className="self-stretch text-[14px] sm:text-[18px] w-[211px] sm:w-[300px]">
                 {data?.release_date} · {data?.adult == false ? "PG" : "R18+"} ·
                 {timeConvert(data?.runtime ?? 0)}
               </p>
             </div>
-            <div className="flex flex-col items-start gap-0">
+            <div className="flex flex-col justify-end sm:justify-normal items-start gap-0">
               <p className="text-3 font-medium">Rating</p>
               <div className="flex h-[48px] items-center gap-1 self-stretch">
                 <div className="flex pt-2 items-start gap-[10px] self-stretch">
@@ -176,26 +218,7 @@ export default function Detail() {
               <p className="text-[14px] pt-1">2:35</p>
             </div>
           </div>
-          <div
-            className={`flex w-fit vh-[50vh] bottom-[32%] ml-[50px] absolute ${
-              button ? "flex" : "hidden"
-            }`}>
-            <iframe
-              ref={iframeRef}
-              src={`https://youtube.com/embed/${trailer(
-                datatrailers
-              )}?si=UMWGenzXIx0OnlcK`}
-              className={`w-[997px] h-[561px] mt-10 aspect-video`}></iframe>
-            <button
-              onClick={handlebutton}
-              className="flex w-fit h-fit justify-center items-center rounded-full bg-white">
-              <MdCancel
-                className={`size-10 text-black aspect-video ${
-                  button ? "flex" : "hidden"
-                }`}
-              />
-            </button>
-          </div>
+
 
           <div
             className={`flex w-full flex-col items-start gap-5 ${

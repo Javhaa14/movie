@@ -39,7 +39,7 @@ const BodyContent = ({ children }: { children: React.ReactNode }) => {
     <body
       className={`${geistSans.variable} ${
         geistMono.variable
-      } antialiased w-screen flex flex-col ${mode ? "bg-white" : "bg-black"}`}>
+      }bg-[rgba(0,0,0,0.5)] antialiased w-screen h-[100%] flex flex-col ${mode ? "bg-white" : "bg-black"}`}>
       <Navigation />
       {children}
       <Footer />

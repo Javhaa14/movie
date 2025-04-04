@@ -2,8 +2,8 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 export const Footer = ({}) => {
   return (
-    <footer className="flex w-full h-[280px] py-[40px] justify-center items-start gap-[48px] bg-[#4338CA] text-[#FAFAFA]">
-      <div className="w-full flex flex-row justify-between items-start px-20">
+    <footer className="flex w-full h-fit pt-[40px] p-5 justify-center items-start gap-[48px] bg-[#4338CA] text-[#FAFAFA]">
+      <div className="w-full flex flex-col sm:flex-row justify-normal sm:justify-between items-start gap-7 sm:gap-0">
         <div className="flex flex-col w-[300px] items-start gap-3 self-stretch">
           <div className="flex flex-row items-center gap-2 w-[109px]">
             <svg
@@ -23,7 +23,7 @@ export const Footer = ({}) => {
           </div>
           <p className="text-[16px]">© 2024 Movie Z. All Rights Reserved.</p>
         </div>
-        <div className="flex justify-end items-start gap-[96px]">
+        <div className="flex justify-end items-start gap-12 sm:gap-[96px]">
           <div className="flex flex-col h-[200px] items-start gap-3">
             <p className="text-[14px]">Contact Information</p>
             <div className="flex flex-col items-start gap-6">
@@ -45,7 +45,7 @@ export const Footer = ({}) => {
           </div>
           <div className="flex flex-col items-start gap-3 text-[14px]">
             <p>Follow us </p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
               <p>Facebook</p>
               <p>Instagram</p>
               <p>Instagram</p>

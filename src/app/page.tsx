@@ -62,18 +62,19 @@ export default function Home() {
         className={`flex flex-col w-screen h-fit mt-6 mb-[71px] gap-[73px] ${
           mode ? "bg-white" : "bg-black"
         }`}>
-        <section className="flex flex-col w-full h-[600px] gap-6">
+        <section className="flex flex-col w-[375px] sm:w-full h-[510px] sm:h-[600px] gap-6">
           <Carousel
             plugins={[
               Autoplay({
                 delay: 5000,
               }),
             ]}
-            className="w-full h-[600px]">
+            className="w-full h-fit">
             <CarouselContent>
               {data?.slice(0, 5).map((value: Movie, index: number) => {
                 return (
                   <Nowplaying
+                    mode={mode}
                     data={data}
                     onclick={() => {
                       handleon(value.id);
@@ -88,8 +89,8 @@ export default function Home() {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="ml-[100px] mt-[50px]" />
-            <CarouselNext className="mr-[100px] mt-[50px]" />
+            <CarouselPrevious className="ml-[100px] mt-[50px] hidden sm:flex" />
+            <CarouselNext className="mr-[100px] mt-[50px] hidden sm:flex" />
           </Carousel>
         </section>
         {sectiondata?.map((value) => {

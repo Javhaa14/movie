@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { CarouselItem } from "@/components/ui/carousel";
 import { CiPlay1 } from "react-icons/ci";
 
 interface propsType {
@@ -15,10 +9,12 @@ interface propsType {
   description: string;
   src: string;
   onclick: () => void;
-  data: Array<any>; 
+  data: Array<any>;
+  mode: boolean;
 }
 
 export const Nowplaying = ({
+  mode,
   title,
   rate,
   description,
@@ -29,15 +25,20 @@ export const Nowplaying = ({
   return (
     <CarouselItem
       onClick={onclick}
-      className="w-full h-[600px] flex justify-center overflow-hidden relative">
+      className="w-full h-[510px] sm:h-[600px] flex justify-center overflow-hidden relative">
       <img
         id={`slde-1`}
-        className="w-[1440px] h-[700px] absolute"
+        className="w-[375px] h-[246px] sm:w-[1440px] sm:h-[700px] absolute"
         src={`https://image.tmdb.org/t/p/original${src}`}></img>
-      <div className="flex flex-col items-start gap-4 absolute left-[140px] bottom-[158px] text-white">
-        <div className="flex flex-col items-start gap-0 w-[404px] ">
-          <p className="text-[16px]">Now Playing:</p>
-          <p className="text-[36px] font-bold">{title}</p>
+      <div
+        className={`flex flex-col p-5 w-[375px] min-h-[250px] items-start gap-4 absolute left-[15px] sm:left-[140px] top-[245px] sm:top-[150px] ${
+          mode ? "text-[#09090B]" : " text-white"
+        } sm:text-white sm:bg-[rgba(0,0,0,0.5)] rounded-xl`}>
+        <div className="flex justify-between sm:justify-normal flex-row sm:flex-col items-start gap-0 w-full">
+          <div className="flex h-[52px] sm:h-full overflow-hidden flex-col max-w-[252px] sm:max-w-[500px]">
+            <p className="text-[14px] sm:text-[16px]">Now Playing:</p>
+            <p className="text-[24px] sm:text-[36px] font-bold">{title}</p>
+          </div>
           <div className="flex w-[83px] h-[48px] items-center gap-1">
             <div className="flex items-start gap-[10px] self-stretch pt-2">
               <img className="size-[28px]" src="star.svg"></img>
@@ -48,17 +49,19 @@ export const Nowplaying = ({
             </div>
           </div>
         </div>
-        <p className="w-[310px] text-[12px] font-[400]">{description}</p>
+        <p className="w-[310px] h-[100px] sm:h-full overflow-scroll text-[12px] font-[400]">
+          {description}
+        </p>
         <button className="flex w-fit h-[40px] py-2 px-4 justify-center items-center gap-2 rounded-md bg-[#F4F4F5]">
           <CiPlay1 className="size-4 text-[#18181B]" />
           <p className="text-[#18181B] text-[14px] font-[400]">Watch Trailer</p>
         </button>
       </div>
-      <div className="inline-flex w-full items-center gap-2 absolute top-140 justify-center">
-        {data?.slice(0, 5).map((_, index) => { 
+      <div className="inline-flex w-full items-center gap-2 absolute top-55 sm:top-140 justify-center">
+        {data?.slice(0, 5).map((_, index) => {
           return (
             <a
-              key={index} 
+              key={index}
               className="size-3 rounded-[50%] bg-[#808080] hover:bg-white"
               href="#slde-1"></a>
           );

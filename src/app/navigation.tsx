@@ -234,7 +234,7 @@ export const Navigation = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <Input mode={mode} change={handleonchange}></Input>
+        <Input value={inputvalue} mode={mode} change={handleonchange}></Input>
         <div
           className={`flex w-[577px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[34vw] top-[5vh] z-30 ${
             mode ? "bg-white" : "bg-black"

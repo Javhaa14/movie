@@ -74,21 +74,21 @@ export default function Morelike({
   return (
     <div className="w-screen h-fit flex flex-col mt-[52px] ">
       <div
-        className={`flex px-[80px] w-full flex-col items-start gap-[32px] mb-[32px] ${
+        className={`flex px-5 sm:px-[80px] w-full flex-col items-start gap-[32px] mb-[32px] ${
           mode ? "text-[#09090B]" : "text-[#FFF]"
         }`}>
         <div className="flex justify-between items-start self-stretch">
-          <p className="w-[198px] text-[30px] font-semibold">More Like This</p>
+          <p className="w-fit text-[30px] font-semibold">More Like This</p>
         </div>
 
-        <div className="w-full h-full grid grid-cols-5 gap-8">
+        <div className="w-full h-full grid grid-cols-2 sm:grid-cols-5 gap-8">
           {datasimiliar?.map((movie: data, index: number) => (
             <Movie
-              cla={`w-[230px] min-h-[340px]`}
-              na={`h-[214px]`}
+              cla={`w-[157px] sm:w-[230px] min-h-[233px] sm:min-h-[340px]`}
+              na={`h-[142px] sm:h-[214px]`}
               key={index}
               onclick={() => handleonclick(movie.id)}
-              className={`w-[230px] h-[439px] ${
+              className={`w-[158px] sm:w-[230px] h-[309px] sm:h-[439px] ${
                 mode
                   ? "text-[#09090B] bg-[#F4F4F5]"
                   : "text-[#FFF] bg-[#222222]"
@@ -100,14 +100,14 @@ export default function Morelike({
           ))}
         </div>
 
-        <div className="w-full h-full grid grid-cols-5 gap-8">
+        <div className="w-full h-full grid grid-cols-2 sm:grid-cols-5 gap-8">
           {data?.map((movie: data, index: number) => (
             <Movie
-              cla={`w-[230px] min-h-[340px]`}
-              na={`h-[214px]`}
+              cla={`w-[157px] sm:w-[230px] min-h-[233px] sm:min-h-[340px]`}
+              na={`h-[142px] sm:h-[214px]`}
               key={index}
               onclick={() => handleonclick(movie.id)}
-              className={`w-[230px] h-[439px] ${
+              className={`w-[158px] sm:w-[230px] h-[309px] sm:h-[439px] ${
                 mode
                   ? "text-[#09090B] bg-[#F4F4F5]"
                   : "text-[#FFF] bg-[#222222]"

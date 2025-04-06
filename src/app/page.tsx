@@ -89,8 +89,8 @@ export default function Home() {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="ml-[100px] mt-[50px] hidden sm:flex" />
-            <CarouselNext className="mr-[100px] mt-[50px] hidden sm:flex" />
+            <CarouselPrevious className="ml-[100px] mt-[50px] hidden sm:flex cursor-pointer hover:bg-black hover:text-white" />
+             <CarouselNext className="mr-[100px] mt-[50px] hidden sm:flex cursor-pointer hover:bg-black hover:text-white" />
           </Carousel>
         </section>
         {sectiondata?.map((value) => {

@@ -156,7 +156,7 @@ export const Navigation = () => {
         </div>
       </div>
       <div
-        className={`flex w-[335px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[8vw] top-[8vh] z-30 ${
+        className={`flex sm:hidden w-[335px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[8vw] top-[8vh] z-30 ${
           mode ? "bg-white" : "bg-black"
         } ${inputvalue !== "" ? "flex" : "hidden"}`}>
         {data?.slice(0, 5).map((value) => {
@@ -183,7 +183,7 @@ export const Navigation = () => {
           }}
           className={`${
             data.length == 0 ? "hidden" : "flex"
-          } w-full h-10 px-4 py-2 justify-start items-center gap-2 rounded-md`}>
+          } cursor-pointer w-full h-10 px-4 py-2 justify-start items-center gap-2 rounded-md active:underline`}>
           <p className="text-[14px] font-medium">
             See all results for "{debouncedInputvalue}"
           </p>
@@ -236,7 +236,7 @@ export const Navigation = () => {
         </NavigationMenu>
         <Input value={inputvalue} mode={mode} change={handleonchange}></Input>
         <div
-          className={`flex w-[577px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[34vw] top-[5vh] z-30 ${
+          className={`flex w-[577px] p-3 h-fit gap-100px flex-col items-start gap-0 rounded-lg border-[1px] solid border-[#E4E4E7] absolute left-[34vw] top-[10vh] z-30 ${
             mode ? "bg-white" : "bg-black"
           } ${inputvalue !== "" ? "flex" : "hidden"}`}>
           {data?.slice(0, 5).map((value) => {
@@ -263,7 +263,7 @@ export const Navigation = () => {
             }}
             className={`${
               data.length == 0 ? "hidden" : "flex"
-            } w-full h-10 px-4 py-2 justify-start items-center gap-2 rounded-md`}>
+            } cursor-pointer w-full h-10 px-4 py-2 justify-start items-center gap-2 rounded-md hover:underline`}>
             <p className="text-[14px] font-medium">
               See all results for "{debouncedInputvalue}"
             </p>
@@ -288,7 +288,7 @@ export const Navigation = () => {
         </button>
         <button
           onClick={toggleMode}
-          className={`flex justify-center items-center size-[36px] rounded-md border-[1px] solid border-[#E4E4E7] ${
+          className={`cursor-pointer flex justify-center items-center size-[36px] rounded-md border-[1px] solid border-[#E4E4E7] ${
             mode ? "bg-white" : "bg-black"
           } shadow-sm`}>
           <svg

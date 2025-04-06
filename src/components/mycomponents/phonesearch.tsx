@@ -11,7 +11,7 @@ export const Phonesearch = ({ mode, change, buttonsearch, down }: any) => {
       <div className="flex items-center gap-3">
         <button
           onClick={down}
-          className={`flex justify-center items-center size-[36px] gap-2 rounded-md border-[1px] solid shadow-sm  border-[#E4E4E7]`}>
+          className={`cursor-pointer flex justify-center items-center size-[36px] gap-2 rounded-md border-[1px] solid shadow-sm  border-[#E4E4E7]`}>
           <GoChevronDown
             className={`${mode ? "text-[#09090B]" : "text-[#fff]"}`}
           />
@@ -26,7 +26,7 @@ export const Phonesearch = ({ mode, change, buttonsearch, down }: any) => {
         />
         <input
           onChange={change}
-          className="w-full flex py-3 items-center gap-[10px]"
+          className="w-full flex py-3 items-center gap-[10px] focus:outline-none"
           type="text"
           placeholder="Search..."></input>
       </div>

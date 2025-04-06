@@ -128,7 +128,7 @@ export default function Detail() {
           } justify-center bg-[rgba(0,0,0,0.5)]`}>
           <button
             onClick={handlebutton}
-            className="flex sm:hidden w-fit h-fit justify-center items-center rounded-full bg-white absolute z-50 left-[88%] bottom-[91%]">
+            className="flex sm:hidden cursor-pointer w-fit h-fit justify-center items-center rounded-full bg-white absolute z-50 left-[88%] bottom-[91%]">
             <MdCancel
               className={`size-10 text-black aspect-video ${
                 button ? "flex" : "hidden"
@@ -146,7 +146,7 @@ export default function Detail() {
 
           <button
             onClick={handlebutton}
-            className="hidden sm:flex w-fit h-fit justify-center items-center rounded-full bg-white">
+            className="hidden sm:flex cursor-pointer w-fit h-fit justify-center items-center rounded-full bg-white">
             <MdCancel
               className={`size-10 text-black aspect-video ${
                 button ? "flex" : "hidden"
@@ -158,7 +158,7 @@ export default function Detail() {
           className={`flex w-[375px] sm:w-[1230px] justify-center flex-col items-start gap-8 pt-8 sm:py-10 px-0 sm:px-[80px] ${
             mode ? "text-[#09090B]" : "text-[#FFF]"
           }`}>
-          <div className="flex sm:hidden w-full px-5 sm:pr-3 justify-normal sm:justify-between items-center self-stretch gap-10 sm:gap-0">
+          <div className="flex w-full px-5 sm:pr-3 justify-normal sm:justify-between items-center self-stretch gap-10 sm:gap-0">
             <div className="flex w-[211px] sm:w-fit flex-col items-start gap-1">
               <a
                 href="https://hdplayer.icu/index.php?id=6574&key=146ff4"
@@ -216,7 +216,7 @@ export default function Detail() {
               <div className="flex flex-row justify-center items-center gap-3">
                 <button
                   onClick={handlebutton}
-                  className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
+                  className="size-10 cursor-pointer flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
                   <CiPlay1 className="size-4 text-black" />
                 </button>
                 <p className="text-4 ">Play trailer </p>
@@ -237,7 +237,7 @@ export default function Detail() {
             <div className="flex flex-row brightness-100 pt-[300px] pr-[200px] w-[400px] h-[300px] justify-center items-center gap-3 text-white pl-6 absolute">
               <button
                 onClick={handlebutton}
-                className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white">
+                className="size-10 flex h-10 px-2 py-2 justify-center items-center gap-2 rounded-full bg-white cursor-pointer">
                 <CiPlay1 className="size-4 text-black" />
               </button>
               <p className="text-4 ">Play trailer </p>
@@ -291,7 +291,7 @@ export default function Detail() {
                     handle(id);
                   }
                 }}
-                className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+                className="cursor-pointer flex h-[36px] px-4 py-2 justify-center items-center gap-2">
                 <p className="text-[14px]">See more</p>
                 <FaArrowRight className="size-[16px]" />
               </button>

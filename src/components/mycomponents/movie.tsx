@@ -18,7 +18,7 @@ export const Movie = ({
   return (
     <div
       onClick={onclick}
-      className={`flex flex-col items-start rounded-lg brightness-100 hover:brightness-90 ${className}`}>
+      className={`cursor-pointer flex flex-col items-start rounded-lg brightness-100 hover:brightness-90 ${className}`}>
       <img className={`rounded-t-lg ${cla}`} src={image}></img>
       <div
         className={`flex ${na} px-2 py-1 flex-col items-start self-stretch overflow-scroll rounded-b-lg`}>

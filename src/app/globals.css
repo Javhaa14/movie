@@ -121,3 +121,6 @@
     @apply bg-white text-foreground;
   }
 }
+::-webkit-scrollbar {
+  display: none;
+}

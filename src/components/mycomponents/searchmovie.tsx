@@ -11,13 +11,14 @@ export const Searchmovie = ({
 }: any) => {
   return (
     <div
+     id="group"
       className={`${
-        mode ? "bg-white" : "bg-black"
-      } w-full h-full brightness-100 hover:brightness-120`}>
+        mode ? "bg-white text-black group hover:text-[#09090B] group hover:bg-gray-200" : "bg-black group hover:bg-[#222222] text-white group hover:[#FFF]"
+      } w-full h-full rounded-md`}>
       <div className="flex flex-row">
         <div
           onClick={onclick}
-          className="flex w-[577px] h-fit p-2 items-center gap-4 self-stretch rounded-lg">
+          className="cursor-pointer flex w-[577px] h-fit p-2 items-center gap-4 self-stretch rounded-lg">
           <img className="w-[67px] h-[100px] rounded-md" src={`${src}`}></img>
           <div className="flex flex-col items-start gap-3">
             <div className="flex flex-col items-start self-stretch">
@@ -66,8 +67,8 @@ export const Searchmovie = ({
         </div>
         <button
           onClick={seemore}
-          className={`flex absolute mt-[76px] ml-[430px] w-fit h-9 px-4 py-2 justify-center items-center gap-2 rounded-md bg-black ${
-            mode ? "bg-white" : "bg-black"
+          className={`cursor-pointer flex absolute mt-[76px] ml-[425px] w-fit h-9 px-4 py-2 justify-center items-center gap-2 rounded-md bg-black ${
+            mode ? "bg-white group-hover:bg-gray-200 text-black group-hover:text-[#09090B] hover:bg-black hover:text-white" : "bg-black group-hover:bg-[#222222] text-white group-hover:[#FFF] hover:bg-white hover:text-black"
           }`}>
           <p className="w-[69px]">See more</p>
           <MdArrowForward />

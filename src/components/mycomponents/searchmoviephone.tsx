@@ -12,12 +12,12 @@ export const Searchmoviephone = ({
   return (
     <div
       className={`${
-        mode ? "bg-white" : "bg-black"
-      } w-[295px] h-full brightness-100 hover:brightness-120`}>
+        mode ? "bg-white text-black group active:text-[#09090B] group active:bg-gray-200" : "bg-black group active:bg-[#222222] text-white group active:[#FFF]"
+      } w-[295px] h-full rounded-md`}>
       <div className="flex flex-row">
         <div
           onClick={onclick}
-          className="flex w-[295px] h-fit p-2 items-center gap-4 self-stretch rounded-lg">
+          className="cursor-pointer flex w-[295px] h-fit p-2 items-center gap-4 self-stretch rounded-lg">
           <img className="w-[67px] h-[100px] rounded-md" src={`${src}`}></img>
           <div className="flex w-fit flex-col items-start gap-3">
             <div className="flex flex-col items-start self-stretch">
@@ -68,8 +68,8 @@ export const Searchmoviephone = ({
         </div>
         <button
           onClick={seemore}
-          className={`flex absolute mt-[76px] ml-[180px] w-fit h-9 px-4 py-2 justify-center items-center gap-2 rounded-md bg-black ${
-            mode ? "bg-white" : "bg-black"
+          className={`cursor-pointer flex absolute mt-[76px] ml-[170px] w-fit h-9 px-4 py-2 justify-center items-center gap-2 rounded-md bg-black ${
+            mode ? "bg-white group-active:bg-gray-200 text-black group-active:text-[#09090B] active:bg-black active:text-white" : "bg-black group-active:bg-[#222222] text-white group-active:[#FFF] active:bg-white active:text-black"
           }`}>
           <p className="w-[69px]">See more</p>
           <MdArrowForward />

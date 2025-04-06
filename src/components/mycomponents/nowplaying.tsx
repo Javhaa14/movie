@@ -25,7 +25,7 @@ export const Nowplaying = ({
   return (
     <CarouselItem
       onClick={onclick}
-      className="w-full h-[510px] sm:h-[600px] flex justify-center overflow-hidden relative">
+      className="w-full h-[510px] sm:h-[600px] flex justify-center overflow-hidden relative cursor-pointer">
       <img
         id={`slde-1`}
         className="w-[375px] h-[246px] sm:w-[1440px] sm:h-[700px] absolute"

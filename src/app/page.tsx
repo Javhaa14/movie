@@ -63,13 +63,14 @@ export default function Home() {
           mode ? "bg-white" : "bg-black"
         }`}>
         <section className="flex flex-col w-[375px] sm:w-full h-[510px] sm:h-[600px] gap-6">
-          <Carousel
-            plugins={[
-              Autoplay({
-                delay: 5000,
-              }),
-            ]}
-            className="w-full h-fit">
+        <Carousel
+  plugins={[
+    Autoplay({
+      delay: 5000,
+    }),
+  ]}
+  className="w-full h-fit">
+
             <CarouselContent>
               {data?.slice(0, 5).map((value: Movie, index: number) => {
                 return (

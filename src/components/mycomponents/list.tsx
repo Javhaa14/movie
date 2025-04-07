@@ -35,7 +35,7 @@ export const List = ({ type, name, className, seemore }: any) => {
         <p className="text-[24px]">{name}</p>
         <button
           onClick={() => seemore(type)}
-          className="flex h-[36px] px-4 py-2 justify-center items-center gap-2">
+          className="flex h-[36px] px-4 py-2 justify-center items-center gap-2 hover:underline cursor-pointer">
           <p className="text-[14px]">See more</p>
           <FaArrowRight className="size-[16px]" />
         </button>
@@ -54,7 +54,7 @@ export const List = ({ type, name, className, seemore }: any) => {
               onclick={() => {
                 handleonclick(value.id);
               }}
-              key={value.id}
+              key={value.id+1}
               name={value.title}
               image={`https://image.tmdb.org/t/p/original${value.poster_path}`}
               rating={(Math.round(value.vote_average * 10) / 10).toFixed(1)}

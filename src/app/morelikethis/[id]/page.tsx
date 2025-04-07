@@ -23,11 +23,9 @@ type data = {
   id: any;
   poster_path?: string;
 };
-export default function Morelike({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export default function Morelike() {
+  const { id }: { id?: string } = useParams();
+
   const { mode, toggleMode } = useMode();
   const params = useParams();
   const searchParams = useSearchParams();

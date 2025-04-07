@@ -17,11 +17,8 @@ import { axiosInstance } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { Noresult } from "@/components/mycomponents/noresult";
 
-export default function Searchresults({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export default function Searchresults() {
+  const { id }: { id?: any } = useParams();
   type MovieType = {
     id: string;
     title: string;
